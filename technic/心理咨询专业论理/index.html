@@ -12,7 +12,7 @@
 <body>
   <div id="headerWrapper">
     <header>
-      <div class="navLine">
+      <div id="navLine">
         <a href="/" id="logo">
           <h2>云匠心</h2>
         </a>
@@ -39,6 +39,13 @@
   </ul>
 </nav>
 
+      </div>
+      <div id="profileLine">
+        <a id="githubAnchor" href="https://github.com/antield/antield.github.io/" target="_blank">
+          <span>Github</span>
+          <span class="material-icons">open_in_new</span>
+        </a>
+        <span id="loginBar"></span>
       </div>
     </header>
   </div>
@@ -83,14 +90,14 @@
   </div>
 </div>
 
-<div id="loginedInfoBar" style="display:none;">
+<span id="loginedInfoBar" style="display:none;">
   <span class="welcomeWords">欢迎您！</span>
   <span class="nickname"></span>
   <a href="javascript:;" class="logoutAnchor">退出</a>
-</div>
-<div id="needLoginInfoBar">
+</span>
+<span id="needLoginInfoBar" style="display:none;">
   <a href="javascript:;" class="loginAnchor">登录</a>
-</div>
+</span>
 
 <div id="captchaBoard" style="display: none;">
   <div id="captchaImageContainer" style="position: relative;width: 256px;height: 192px;overflow: hidden;">
