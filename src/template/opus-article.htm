@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <title><!-- @@title --></title>
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/loginBoard.css" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <div id="headerWrapper">
+    <header>
+      <div id="navLine">
+        <a href="/" id="logo">
+          <span>云匠心</span>
+        </a>
+        <!--%include('src/include/navigator.htm',{"activePage":""})%-->
+      </div>
+      <div id="profileLine">
+        <a id="githubAnchor" href="https://github.com/antield/yunjiang.xin/" target="_blank">
+          <span>Github</span>
+          <span class="material-icons">open_in_new</span>
+        </a>
+        <span id="loginBar"></span>
+      </div>
+    </header>
+  </div>
+  <div id="breadcrumbLineWrapper">
+    <div id="breadcrumbLine">
+      <div id="breadcrumb">
+        <!-- @@breadcrumb -->
+      </div>
+      <div id="operateBar">
+        <span class="material-icons" title="收藏">bookmark_border</span>
+        <span class="material-icons" title="分享">share</span>
+        <span class="material-icons" title="发送到邮箱">mail</span>
+        <span class="material-icons" title="朗读本文">record_voice_over</span>
+        <span class="material-icons" title="查看PDF">picture_as_pdf</span>
+        <span class="material-icons" title="语言选择">language</span>
+      </div>
+    </div>
+  </div>
+  <div id="mainBodyWrapper">
+    <div id="mainBody">
+      <article>
+        <h1><!-- @@title --></h1>
+        <div>
+          <!-- @@content -->
+        </div>
+      </article>
+    </div>
+  </div>
+  <div id="footerWrapper">
+    <footer>
+      邮箱: antield[at]126.com
+    </footer>
+  </div>
+  <!--%include('src/include/loginBoard.htm')%-->
+  <script type="text/javascript" src="/js/compile-less/map_config.js"></script>
+  <script type="text/javascript" src="/js/index.bundle.js"></script>
+</body>
+
+</html>

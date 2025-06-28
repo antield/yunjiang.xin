@@ -1,0 +1,16 @@
+{
+    "order": 1,
+    "directories": [],
+    "files": [
+        {
+            "name": "基础心理学的研究对象及内容",
+            "order": 1,
+            "customPath": "1.基础心理学的研究对象及内容.html"
+        },
+        {
+            "name": "人的心理的本质",
+            "order": 2,
+            "customPath": "2.人的心理的本质.html"
+        }
+    ]
+}

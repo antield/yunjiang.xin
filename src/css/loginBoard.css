@@ -1,0 +1,74 @@
+.loginBoard {
+  line-height: 2;
+  padding: 2em 3em;
+  background-color: white;
+}
+
+.loginFormTitle {
+  margin: 0 0 1em 0;
+  text-align: center;
+  color: #666;
+}
+
+.loginResultTip {
+  color: #a00;
+  font-size: 14px;
+}
+
+.loginResultTip .material-icons {
+  color: #a00;
+  font-size: 16px;
+  margin-right: 0.25em;
+  vertical-align: middle;
+}
+
+.loginResultTip .errorMsg {
+  vertical-align: middle;
+}
+
+.inputRow {
+  padding: 0.75em 0;
+}
+
+.inputElement {
+  width: 260px;
+  height: 36px;
+  padding: 0 1em;
+  box-sizing: border-box;
+}
+
+.loginSubmitRow {
+  padding: 0.75em 0;
+}
+
+.submitButton {
+  background-color: #00a0ea;
+  color: white;
+  border-radius: 5px;
+  border-width: 0;
+  font-size: 14px;
+  padding: 6px 32px;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 260px;
+  height: 36px;
+}
+
+.secondaryButton {
+  background-color: white;
+  color: #00a0ea;
+  border: 1px solid #00a0ea;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 260px;
+  height: 36px;
+}
+
+#croppedImageInput::-webkit-slider-thumb {
+  cursor: pointer;
+}
+
+#registerBoard .inputRow:has(>:required)::after {
+  content: '*';
+  color: red;
+}
