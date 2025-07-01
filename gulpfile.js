@@ -396,7 +396,7 @@ export function clean_task() {
   }).pipe(Clean());
 }
 
-const start = series(clean_task, copy_sources, compile_js, web_server, watch_task, make_opus_index, copy_opus_folder_index);
+const start = series(clean_task, copy_sources, copy_deploy, compile_js, web_server, watch_task, make_opus_index, copy_opus_folder_index);
 
 function changeToProd(cb) {
   Dist = Dist_Prod;
