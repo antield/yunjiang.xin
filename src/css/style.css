@@ -132,6 +132,15 @@ article h1 {
   text-align: center;
 }
 
+article img {
+  max-width: 800px;
+  max-height: 600px;
+}
+
+article p:has(>img){
+  text-align: center;
+}
+
 header #logo,
 header #navigator {
   display: inline-block;
