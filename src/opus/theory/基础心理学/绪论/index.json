@@ -11,6 +11,11 @@
             "name": "人的心理的本质",
             "order": 2,
             "customPath": "2.人的心理的本质.html"
+        },
+        {
+            "name": "心理学发展简史",
+            "order": 3,
+            "customPath": "3.心理学发展简史.html"
         }
     ]
 }
