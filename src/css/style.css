@@ -128,8 +128,26 @@ footer {
   text-align: center;
 }
 
+#topContent h1,
+#summaryContent h1,
+#middleContent h1,
+#bottomContent h1 {
+  text-align: center;
+}
+
+#topContent p,
+#summaryContent p,
+#middleContent p,
+#bottomContent p {
+  text-indent: 2em;
+}
+
 article h1 {
   text-align: center;
+}
+
+article p {
+  text-indent: 2em;
 }
 
 article img {
@@ -137,7 +155,7 @@ article img {
   max-height: 600px;
 }
 
-article p:has(>img){
+article p:has(>img) {
   text-align: center;
 }
 

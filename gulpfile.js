@@ -1,4 +1,5 @@
 import markdown from 'gulp-markdown';
+import { marked } from 'marked';
 import { src, dest, watch, series, parallel } from 'gulp';
 import cleanCSS from 'gulp-clean-css';
 import FileInclude from 'gulp-file-include';
@@ -183,6 +184,21 @@ function injectOpusFolderContent(templateContent) {
     }
     const title = folderInfo.name || file.dirname.substring(file.dirname.lastIndexOf(path.sep) + 1);
     outputContent = outputContent.replace('<!-- @@title -->', title);
+
+    const topEmdFile = path.join(file.dirname, 'top.emd');
+    let topContent;
+    try {
+      await fs.access(topEmdFile);
+      topContent = await fs.readFile(topEmdFile, 'utf8');
+      topContent = "<div id=\"topContent\">\n" + topContent + "</div>\n"
+    } catch (e) {
+      if (e.code != 'ENOENT') {
+        console.log("parse topContent error: ", e);
+      }
+      topContent = "";
+    }
+    outputContent = outputContent.replace('<!-- @@topContent -->', topContent);
+
     const folderArr = folderInfo.directories;
     folderArr.sort(function (a, b) {
       return a.order - b.order;
@@ -197,9 +213,37 @@ function injectOpusFolderContent(templateContent) {
       const folderArrLiHtml = folderArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>\n';
       });
-      const folderArrUlHtml = '<ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul>\n';
+      const folderArrUlHtml = '<div><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></div>\n';
       outputContent = outputContent.replace('<!-- @@foldersContent -->', folderArrUlHtml);
     }
+
+    const summaryEmdFile = path.join(file.dirname, 'summary.emd');
+    let summaryContent;
+    try {
+      await fs.access(summaryEmdFile);
+      const mdContent = await fs.readFile(summaryEmdFile, 'utf8');
+      summaryContent = marked.parse(mdContent);
+      summaryContent = "<div id=\"summaryContent\">\n" + summaryContent + "</div>\n"
+    } catch (e) {
+      if (e.code != 'ENOENT') {
+        console.log("parse summaryContent error: ", e);
+      }
+      summaryContent = "";
+    }
+    const middleEmdFile = path.join(file.dirname, 'middle.emd');
+    let middleContent;
+    try {
+      await fs.access(topEmdFile);
+      middleContent = await fs.readFile(middleEmdFile, 'utf8');
+      middleContent = "<div id=\"summaryContent\">\n" + middleContent + "</div>\n"
+    } catch (e) {
+      if (e.code != 'ENOENT') {
+        console.log("parse middleContent error: ", e);
+      }
+      middleContent = "";
+    }
+    outputContent = outputContent.replace('<!-- @@middleContent -->', summaryContent + middleContent);
+
     const fileArr = folderInfo.files;
     if (fileArr.length == 0) {
       const displayClassName = " displayNone";
@@ -214,9 +258,24 @@ function injectOpusFolderContent(templateContent) {
       const fileArrLiHtml = fileArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>';
       })
-      const fileArrUlHtml = '<ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul>\n';
+      const fileArrUlHtml = '<div><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul></div>\n';
       outputContent = outputContent.replace('<!-- @@articlesContent -->', fileArrUlHtml);
     }
+
+    const bottomEmdFile = path.join(file.dirname, 'bottom.emd');
+    let bottomContent;
+    try {
+      await fs.access(topEmdFile);
+      bottomContent = await fs.readFile(bottomEmdFile, 'utf8');
+      bottomContent = "<div id=\"summaryContent\">\n" + bottomContent + "</div>\n"
+    } catch (e) {
+      if (e.code != 'ENOENT') {
+        console.log("parse bottomContent error: ", e);
+      }
+      bottomContent = "";
+    }
+    outputContent = outputContent.replace('<!-- @@bottomContent -->', bottomContent);
+
     file.contents = Buffer.from(outputContent);
     file.extname = '.html';
     cb(null, file);
