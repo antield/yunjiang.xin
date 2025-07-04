@@ -1,5 +1,21 @@
 {
     "order": 2,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "神经系统的构造及功能",
+            "order": 1,
+            "customPath": "1.神经系统的构造及功能.html"
+        },
+        {
+            "name": "内分泌系统与心理",
+            "order": 2,
+            "customPath": "2.内分泌系统与心理.html"
+        },
+        {
+            "name": "高级神经活动的反射学说",
+            "order": 3,
+            "customPath": "3.高级神经活动的反射学说.html"
+        }
+    ]
 }

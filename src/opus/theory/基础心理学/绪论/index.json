@@ -16,6 +16,11 @@
             "name": "心理学发展简史",
             "order": 3,
             "customPath": "3.心理学发展简史.html"
+        },
+        {
+            "name": "研究心理现象的原则和方法",
+            "order": 4,
+            "customPath": "4.研究心理现象的原则和方法.html"
         }
     ]
 }

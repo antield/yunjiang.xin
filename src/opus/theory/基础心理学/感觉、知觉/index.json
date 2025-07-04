@@ -1,5 +1,21 @@
 {
     "order": 3,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "感觉概述",
+            "order": 1,
+            "customPath": "1.感觉概述.html"
+        },
+        {
+            "name": "感受性与感觉阈限",
+            "order": 2,
+            "customPath": "2.感受性与感觉阈限.html"
+        },
+        {
+            "name": "各种感觉",
+            "order": 3,
+            "customPath": "3.各种感觉.html"
+        }
+    ]
 }
