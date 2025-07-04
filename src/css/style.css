@@ -159,6 +159,17 @@ article p:has(>img) {
   text-align: center;
 }
 
+article .specialColumn {
+  border: 2px solid #ccc;
+  padding: 1em;
+}
+
+article .specialColumn::before{
+  content: '📖';
+  float: left;
+  font-size: 36px;
+}
+
 header #logo,
 header #navigator {
   display: inline-block;
