@@ -39,7 +39,7 @@ a:visited {
 
 header,
 #breadcrumbLine,
-#mainBody,
+main,
 footer {
   width: 1024px;
   margin: auto;
@@ -117,7 +117,7 @@ footer {
   color: var(--main-link-color);
 }
 
-#mainBody {
+main {
   padding-top: 1em;
   padding-bottom: 1em;
 }

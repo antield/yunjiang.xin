@@ -190,7 +190,7 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(topEmdFile);
       topContent = await fs.readFile(topEmdFile, 'utf8');
-      topContent = "<div id=\"topContent\">\n" + topContent + "</div>\n"
+      topContent = "<section id=\"topContent\">\n" + topContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse topContent error: ", e);
@@ -213,7 +213,7 @@ function injectOpusFolderContent(templateContent) {
       const folderArrLiHtml = folderArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>\n';
       });
-      const folderArrUlHtml = '<div><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></div>\n';
+      const folderArrUlHtml = '<section><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></section>\n';
       outputContent = outputContent.replace('<!-- @@foldersContent -->', folderArrUlHtml);
     }
 
@@ -223,7 +223,7 @@ function injectOpusFolderContent(templateContent) {
       await fs.access(summaryEmdFile);
       const mdContent = await fs.readFile(summaryEmdFile, 'utf8');
       summaryContent = marked.parse(mdContent);
-      summaryContent = "<div id=\"summaryContent\">\n" + summaryContent + "</div>\n"
+      summaryContent = "<section id=\"summaryContent\">\n" + summaryContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse summaryContent error: ", e);
@@ -235,7 +235,7 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(topEmdFile);
       middleContent = await fs.readFile(middleEmdFile, 'utf8');
-      middleContent = "<div id=\"summaryContent\">\n" + middleContent + "</div>\n"
+      middleContent = "<section id=\"summaryContent\">\n" + middleContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse middleContent error: ", e);
@@ -258,7 +258,7 @@ function injectOpusFolderContent(templateContent) {
       const fileArrLiHtml = fileArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>';
       })
-      const fileArrUlHtml = '<div><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul></div>\n';
+      const fileArrUlHtml = '<section><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul></section>\n';
       outputContent = outputContent.replace('<!-- @@articlesContent -->', fileArrUlHtml);
     }
 
@@ -267,7 +267,7 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(topEmdFile);
       bottomContent = await fs.readFile(bottomEmdFile, 'utf8');
-      bottomContent = "<div id=\"summaryContent\">\n" + bottomContent + "</div>\n"
+      bottomContent = "<section id=\"summaryContent\">\n" + bottomContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse bottomContent error: ", e);
