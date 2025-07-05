@@ -1,4 +1,4 @@
-# Wellcome to yunjiang.xin
+# yunjiang.xin 云匠心
 
 这是一个文档类的静态页面站点项目，主要记录的是心理学相关基础知识。
 文档主要由Markdown编写，使用git进行版本管理，可查询修改记录。
