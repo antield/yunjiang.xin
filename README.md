@@ -1,13 +1,13 @@
 # yunjiang.xin
 
 这是一个文档类的静态页面站点项目，主要记录的是心理学相关基础知识。
-文档主要由Markdown编写，使用git进行版本管理，可查询修改记录。
+文档主要由Markdown格式编写，使用git进行版本管理，可查询变更记录。
 
 访问地址：[yunjiang.xin](https://yunjiang.xin)
 
 ### 项目初始化和运行
 
-项目依赖NodeJS和git，需要先安装NodeJS和git。
+项目依赖NodeJS和git，本地运行需要先安装NodeJS和git。
 
 运行项目：
 1. git clone https://github.com/yunjiangxin/yunjiang.xin.git
@@ -15,7 +15,7 @@
 3. npm install -g gulp-cli
 4. gulp
 
-运行项目后，默认浏览器自动访问：http://localhost:9602/
+项目启动后，会自动打开默认浏览器访问：http://localhost:9602/
 
 编译：gulp build
 
