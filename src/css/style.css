@@ -143,6 +143,11 @@ footer {
   line-height: 2;
 }
 
+#folderMenu,
+#articleMenu {
+  line-height: 2;
+}
+
 article h1 {
   text-align: center;
 }
@@ -166,7 +171,7 @@ article .specialColumn {
   padding: 1em;
 }
 
-article .specialColumn::before{
+article .specialColumn::before {
   content: '📖';
   float: left;
   font-size: 36px;

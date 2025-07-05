@@ -213,7 +213,7 @@ function injectOpusFolderContent(templateContent) {
       const folderArrLiHtml = folderArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>\n';
       });
-      const folderArrUlHtml = '<section><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></section>\n';
+      const folderArrUlHtml = '<section id=\"folderMenu\"><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></section>\n';
       outputContent = outputContent.replace('<!-- @@foldersContent -->', folderArrUlHtml);
     }
 
@@ -258,7 +258,7 @@ function injectOpusFolderContent(templateContent) {
       const fileArrLiHtml = fileArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>';
       })
-      const fileArrUlHtml = '<section><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul></section>\n';
+      const fileArrUlHtml = '<section id=\"articleMenu\"><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join('') + '</ul></section>\n';
       outputContent = outputContent.replace('<!-- @@articlesContent -->', fileArrUlHtml);
     }
 
