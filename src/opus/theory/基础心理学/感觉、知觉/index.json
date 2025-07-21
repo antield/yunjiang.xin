@@ -16,6 +16,11 @@
             "name": "各种感觉",
             "order": 3,
             "customPath": "3.各种感觉.html"
+        },
+        {
+            "name": "感觉现象",
+            "order": 4,
+            "customPath": "4.感觉现象.html"
         }
     ]
 }
