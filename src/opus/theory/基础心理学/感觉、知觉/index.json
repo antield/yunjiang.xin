@@ -21,6 +21,16 @@
             "name": "感觉现象",
             "order": 4,
             "customPath": "4.感觉现象.html"
+        },
+        {
+            "name": "知觉概述",
+            "order": 5,
+            "customPath": "5.知觉概述.html"
+        },
+        {
+            "name": "知觉的种类",
+            "order": 6,
+            "customPath": "6.知觉的种类.html"
         }
     ]
 }
