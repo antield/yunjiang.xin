@@ -184,12 +184,16 @@ header #navigator {
 }
 
 header a:link,
-header a:visited {
+header a:visited,
+footer a:link,
+footer a:visited {
   color: black;
 }
 
 header a:link:hover,
-header a:visited:hover {
+header a:visited:hover,
+footer a:link:hover,
+footer a:visited:hover {
   color: var(--main-link-color);
 }
 
@@ -277,6 +281,19 @@ section {
 
 section p {
   line-height: 2em;
+}
+
+footer>span,
+footer>a {
+  vertical-align: middle;
+}
+
+#newIssueAnchor {
+  margin-left: 1em;
+}
+
+#newIssueAnchor span {
+  vertical-align: middle;
 }
 
 .learnMoreLink {
