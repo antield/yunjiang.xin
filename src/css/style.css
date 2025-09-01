@@ -22,6 +22,10 @@ a:visited {
   color: var(--main-link-color);
 }
 
+.vertical-middle {
+  vertical-align: middle;
+}
+
 #headerWrapper,
 #mainBodyWrapper,
 #breadcrumbLineWrapper {
@@ -288,12 +292,8 @@ footer>a {
   vertical-align: middle;
 }
 
-#newIssueAnchor {
+footer>a:not(:first-child) {
   margin-left: 1em;
-}
-
-#newIssueAnchor span {
-  vertical-align: middle;
 }
 
 .learnMoreLink {
