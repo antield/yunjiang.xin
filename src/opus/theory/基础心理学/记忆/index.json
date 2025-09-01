@@ -1,5 +1,21 @@
 {
     "order": 4,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "记忆及记忆过程",
+            "order": 1,
+            "customPath": "1.记忆及记忆过程.html"
+        },
+        {
+            "name": "遗忘及遗忘规律",
+            "order": 2,
+            "customPath": "2.遗忘及遗忘规律.html"
+        },
+        {
+            "name": "遗忘的原因及系列位置效应",
+            "order": 3,
+            "customPath": "3.遗忘的原因及系列位置效应.html"
+        }
+    ]
 }
