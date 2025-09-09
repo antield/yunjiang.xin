@@ -2,10 +2,13 @@
   --main-link-color: #016cff;
   --header-line-height: 48px;
   --breadcrumb-line-height: 32px;
+  --font-family-text: "Inter", sans-serif;
+  --font-family-code: "JetBrains Mono", monospace;
 }
 
 html {
   height: 100%;
+  font-family: var(--font-family-text);
 }
 
 body {
