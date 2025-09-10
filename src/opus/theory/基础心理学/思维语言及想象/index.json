@@ -21,6 +21,11 @@
             "name": "语言与言语",
             "order": 4,
             "customPath": "4.语言与言语.html"
+        },
+        {
+            "name": "表象与想象",
+            "order": 5,
+            "customPath": "5.表象与想象.html"
         }
     ]
 }
