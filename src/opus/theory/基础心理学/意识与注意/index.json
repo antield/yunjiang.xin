@@ -6,6 +6,16 @@
             "name": "意识概述",
             "order": 1,
             "customPath": "1.意识概述.html"
+        },
+        {
+            "name": "注意概述",
+            "order": 2,
+            "customPath": "2.注意概述.html"
+        },
+        {
+            "name": "注意的特征",
+            "order": 3,
+            "customPath": "3.注意的特征.html"
         }
     ]
 }
