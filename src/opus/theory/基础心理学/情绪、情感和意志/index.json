@@ -1,5 +1,21 @@
 {
     "order": 8,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "情绪和情感概述",
+            "order": 1,
+            "customPath": "1.情绪和情感概述.html"
+        },
+        {
+            "name": "情绪和情感的两极性及变化的维度",
+            "order": 2,
+            "customPath": "2.情绪和情感的两极性及变化的维度.html"
+        },
+        {
+            "name": "情绪和情感的种类",
+            "order": 3,
+            "customPath": "3.情绪和情感的种类.html"
+        }
+    ]
 }
