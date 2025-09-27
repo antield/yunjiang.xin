@@ -16,6 +16,11 @@
             "name": "情绪和情感的种类",
             "order": 3,
             "customPath": "3.情绪和情感的种类.html"
+        },
+        {
+            "name": "意志",
+            "order": 4,
+            "customPath": "4.意志.html"
         }
     ]
 }
