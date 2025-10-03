@@ -24,22 +24,22 @@ gulp gh_deploy 命令用于将站点内容发布到github.io
 
 ### 源代码目录结构说明
 
-/src/opus/ 文章目录
-/src/opus/theory/ 基础理论文章目录
-/src/opus/technic/ 实操技能文章目录
-/src/opus/insight/ 内观文章目录
-/src/opus/practice/ 格物文章目录
+- /src/opus/ 文章目录
+- /src/opus/theory/ 基础理论文章目录
+- /src/opus/technic/ 实操技能文章目录
+- /src/opus/insight/ 内观文章目录
+- /src/opus/practice/ 格物文章目录
 
-/src/views/ 站点页面目录
-/src/templates/ 模板目录
+- /src/views/ 站点页面目录
+- /src/templates/ 模板目录
 
-/src/images/ 图片目录
-/src/images/opus/ 文章图片目录
-/src/js/ 脚本目录
-/src/css/ 样式目录
+- /src/images/ 图片目录
+- /src/images/opus/ 文章图片目录
+- /src/js/ 脚本目录
+- /src/css/ 样式目录
 
-/build/dev/ 调试文件夹
-/build/yunjiang.xin/ 发布文件夹
+- /build/dev/ 调试文件夹
+- /build/yunjiang.xin/ 发布文件夹
 
 ### 文章以及目录排序
 
@@ -48,4 +48,4 @@ gulp gh_deploy 命令用于将站点内容发布到github.io
 
 ### 贡献指南
 
-请联系：antield[at]126.com
+请联系：[jiangzi@yunjiang.xin](mailto:jiangzi@yunjiang.xin)
