@@ -1,5 +1,21 @@
 {
     "order": 1,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "社会心理学的定义和研究范围",
+            "order": 1,
+            "customPath": "1.社会心理学的定义和研究范围.html"
+        },
+        {
+            "name": "社会心理学简史",
+            "order": 2,
+            "customPath": "2.社会心理学简史.html"
+        },
+        {
+            "name": "社会心理学的主要理论流派",
+            "order": 3,
+            "customPath": "3.社会心理学的主要理论流派.html"
+        }
+    ]
 }

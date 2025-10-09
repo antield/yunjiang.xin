@@ -197,7 +197,20 @@ function injectOpusFolderContent(templateContent) {
       }
       topContent = "";
     }
-    outputContent = outputContent.replace('<!-- @@topContent -->', topContent);
+    const summaryEmdFile = path.join(file.dirname, 'summary.emd');
+    let summaryContent;
+    try {
+      await fs.access(summaryEmdFile);
+      const mdContent = await fs.readFile(summaryEmdFile, 'utf8');
+      summaryContent = marked.parse(mdContent);
+      summaryContent = "<section id=\"summaryContent\">\n" + summaryContent + "</section>\n"
+    } catch (e) {
+      if (e.code != 'ENOENT') {
+        console.log("parse summaryContent error: ", e);
+      }
+      summaryContent = "";
+    }
+    outputContent = outputContent.replace('<!-- @@topContent -->', topContent + summaryContent);
 
     const folderArr = folderInfo.directories;
     folderArr.sort(function (a, b) {
@@ -217,32 +230,19 @@ function injectOpusFolderContent(templateContent) {
       outputContent = outputContent.replace('<!-- @@foldersContent -->', folderArrUlHtml);
     }
 
-    const summaryEmdFile = path.join(file.dirname, 'summary.emd');
-    let summaryContent;
-    try {
-      await fs.access(summaryEmdFile);
-      const mdContent = await fs.readFile(summaryEmdFile, 'utf8');
-      summaryContent = marked.parse(mdContent);
-      summaryContent = "<section id=\"summaryContent\">\n" + summaryContent + "</section>\n"
-    } catch (e) {
-      if (e.code != 'ENOENT') {
-        console.log("parse summaryContent error: ", e);
-      }
-      summaryContent = "";
-    }
     const middleEmdFile = path.join(file.dirname, 'middle.emd');
     let middleContent;
     try {
       await fs.access(topEmdFile);
       middleContent = await fs.readFile(middleEmdFile, 'utf8');
-      middleContent = "<section id=\"summaryContent\">\n" + middleContent + "</section>\n"
+      middleContent = "<section id=\"middleContent\">\n" + middleContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse middleContent error: ", e);
       }
       middleContent = "";
     }
-    outputContent = outputContent.replace('<!-- @@middleContent -->', summaryContent + middleContent);
+    outputContent = outputContent.replace('<!-- @@middleContent -->', middleContent);
 
     const fileArr = folderInfo.files;
     if (fileArr.length == 0) {
@@ -267,7 +267,7 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(topEmdFile);
       bottomContent = await fs.readFile(bottomEmdFile, 'utf8');
-      bottomContent = "<section id=\"summaryContent\">\n" + bottomContent + "</section>\n"
+      bottomContent = "<section id=\"bottomContent\">\n" + bottomContent + "</section>\n"
     } catch (e) {
       if (e.code != 'ENOENT') {
         console.log("parse bottomContent error: ", e);
