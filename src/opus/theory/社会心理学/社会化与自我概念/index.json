@@ -1,5 +1,21 @@
 {
     "order": 2,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "社会化",
+            "order": 1,
+            "customPath": "1.社会化.html"
+        },
+        {
+            "name": "社会角色",
+            "order": 2,
+            "customPath": "2.社会角色.html"
+        },
+        {
+            "name": "自我、身份与自尊",
+            "order": 3,
+            "customPath": "3.自我、身份与自尊.html"
+        }
+    ]
 }

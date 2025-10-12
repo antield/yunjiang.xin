@@ -1,5 +1,16 @@
 {
     "order": 3,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "社会知觉",
+            "order": 1,
+            "customPath": "1.社会知觉.html"
+        },
+        {
+            "name": "印象形成与印象管理",
+            "order": 2,
+            "customPath": "2.印象形成与印象管理.html"
+        }
+    ]
 }
