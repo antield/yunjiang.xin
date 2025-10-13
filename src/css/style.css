@@ -299,6 +299,17 @@ footer>a:not(:first-child) {
   margin-left: 1em;
 }
 
+article table {
+  border-collapse: collapse;
+  min-width: 75%;
+}
+
+article table td,
+article table th {
+  border: 1px solid gray;
+  padding: 0.5em;
+}
+
 .learnMoreLink {
   padding: 0.5em 1em 0.5em 2em;
   line-height: 32px;

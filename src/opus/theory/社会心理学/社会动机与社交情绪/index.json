@@ -11,6 +11,11 @@
             "name": "主要的社会动机",
             "order": 2,
             "customPath": "2.主要的社会动机.html"
+        },
+        {
+            "name": "社交情绪",
+            "order": 3,
+            "customPath": "3.社交情绪.html"
         }
     ]
 }

@@ -1,5 +1,21 @@
 {
     "order": 5,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "态度概述",
+            "order": 1,
+            "customPath": "1.态度概述.html"
+        },
+        {
+            "name": "态度转变",
+            "order": 2,
+            "customPath": "2.态度转变.html"
+        },
+        {
+            "name": "态度测量",
+            "order": 3,
+            "customPath": "3.态度测量.html"
+        }
+    ]
 }

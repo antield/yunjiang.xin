@@ -1,5 +1,31 @@
 {
     "order": 6,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "沟通的结构与功能",
+            "order": 1,
+            "customPath": "1.沟通的结构与功能.html"
+        },
+        {
+            "name": "身体语言沟通",
+            "order": 2,
+            "customPath": "2.身体语言沟通.html"
+        },
+        {
+            "name": "人际关系的原则和理论",
+            "order": 3,
+            "customPath": "3.人际关系的原则和理论.html"
+        },
+        {
+            "name": "人际吸引",
+            "order": 4,
+            "customPath": "4.人际吸引.html"
+        },
+        {
+            "name": "人际互动",
+            "order": 5,
+            "customPath": "5.人际互动.html"
+        }
+    ]
 }
