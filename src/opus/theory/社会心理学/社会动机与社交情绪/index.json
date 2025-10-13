@@ -1,5 +1,16 @@
 {
     "order": 4,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "社会动机概述",
+            "order": 1,
+            "customPath": "1.社会动机概述.html"
+        },
+        {
+            "name": "主要的社会动机",
+            "order": 2,
+            "customPath": "2.主要的社会动机.html"
+        }
+    ]
 }

@@ -11,6 +11,11 @@
             "name": "印象形成与印象管理",
             "order": 2,
             "customPath": "2.印象形成与印象管理.html"
+        },
+        {
+            "name": "归因",
+            "order": 3,
+            "customPath": "3.归因.html"
         }
     ]
 }
