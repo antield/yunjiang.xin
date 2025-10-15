@@ -1,5 +1,11 @@
 {
     "order": 7,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "从众",
+            "order": 1,
+            "customPath": "1.从众.html"
+        }
+    ]
 }
