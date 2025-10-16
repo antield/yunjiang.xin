@@ -6,6 +6,16 @@
             "name": "从众",
             "order": 1,
             "customPath": "1.从众.html"
+        },
+        {
+            "name": "社会促进与社会懈怠",
+            "order": 2,
+            "customPath": "2.社会促进与社会懈怠.html"
+        },
+        {
+            "name": "模仿、暗示和社会感染",
+            "order": 3,
+            "customPath": "3.模仿、暗示和社会感染.html"
         }
     ]
 }

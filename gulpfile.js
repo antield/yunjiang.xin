@@ -226,7 +226,7 @@ function injectOpusFolderContent(templateContent) {
       const folderArrLiHtml = folderArr.map(function (item) {
         return '<li><a href="' + item.customPath + '">' + item.name + '</a></li>\n';
       });
-      const folderArrUlHtml = '<section id=\"folderMenu\"><h3>目录</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></section>\n';
+      const folderArrUlHtml = '<section id=\"folderMenu\"><h3>栏目</h3><ul class="folder-list">\n' + folderArrLiHtml.join('') + '</ul></section>\n';
       outputContent = outputContent.replace('<!-- @@foldersContent -->', folderArrUlHtml);
     }
 
@@ -265,7 +265,7 @@ function injectOpusFolderContent(templateContent) {
     const bottomEmdFile = path.join(file.dirname, 'bottom.emd');
     let bottomContent;
     try {
-      await fs.access(topEmdFile);
+      await fs.access(bottomEmdFile);
       bottomContent = await fs.readFile(bottomEmdFile, 'utf8');
       bottomContent = "<section id=\"bottomContent\">\n" + bottomContent + "</section>\n"
     } catch (e) {

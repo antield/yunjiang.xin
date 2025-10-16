@@ -1,5 +1,21 @@
 {
     "order": 8,
     "directories": [],
-    "files": []
+    "files": [
+        {
+            "name": "爱情",
+            "order": 1,
+            "customPath": "1.爱情.html"
+        },
+        {
+            "name": "婚姻",
+            "order": 2,
+            "customPath": "2.婚姻.html"
+        },
+        {
+            "name": "家庭",
+            "order": 3,
+            "customPath": "3.家庭.html"
+        }
+    ]
 }

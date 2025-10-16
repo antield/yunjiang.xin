@@ -42,5 +42,11 @@
             "order": 3
         }
     ],
-    "files": []
+    "files": [
+        {
+            "name": "主要参考文献",
+            "order": 1,
+            "customPath": "1.主要参考文献.html"
+        }
+    ]
 }
