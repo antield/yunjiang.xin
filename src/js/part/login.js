@@ -1,5 +1,8 @@
 import * as AssistTool from "../module/assistTool.js";
 
+const DISPLAY_REVERT = "revert";
+const DISPLAY_NONE = "none";
+
 let loginBoard = null;
 let loginedInfoBar = null;
 let needLoginInfoBar = null;
@@ -58,7 +61,7 @@ export function checkLogin() {
 }
 
 function openRegisterPromise(tip) {
-  registerBoard.style.display = "block";
+  registerBoard.style.display = DISPLAY_REVERT;
   if (registerBoardDialog == null)
     registerBoardDialog = AssistTool.showMessageDialog(registerBoard);
   if (!registerBoardDialog.open)
@@ -85,7 +88,7 @@ function openRegisterPromise(tip) {
 }
 
 function openLoginPromise(tip) {
-  loginBoard.style.display = "block";
+  loginBoard.style.display = DISPLAY_REVERT;
   if (loginBoardDialog == null)
     loginBoardDialog = AssistTool.showMessageDialog(loginBoard);
   if (!loginBoardDialog.open)
@@ -108,18 +111,18 @@ function openLoginPromise(tip) {
 }
 
 function showTipDivMsg(tipDiv, msg) {
-  tipDiv.style.display = "block";
+  tipDiv.style.display = DISPLAY_REVERT;
   tipDiv.querySelector(".errorMsg").textContent = msg;
 }
 
 function clearTipDivMsg(tipDiv) {
-  tipDiv.style.display = "none";
+  tipDiv.style.display = DISPLAY_NONE;
   tipDiv.querySelector(".errorMsg").textContent = "";
 }
 
 function openCaptchaPromise(contentObj, tip) {
   let captchaBoard = document.getElementById("captchaBoard");
-  captchaBoard.style.display = "block";
+  captchaBoard.style.display = DISPLAY_REVERT;
   if (captchaDialog == null) {
     captchaDialog = AssistTool.showMessageDialog(captchaBoard);
   }
@@ -229,8 +232,8 @@ function showLoginedInfoBar(userInfo) {
   if (userInfo != null) {
     let nicknameSpan = loginedInfoBar.querySelector(".nickname");
     nicknameSpan.textContent = userInfo.nickname;
-    loginedInfoBar.style.display = "block";
-    needLoginInfoBar.style.display = "none";
+    loginedInfoBar.style.display = DISPLAY_REVERT;
+    needLoginInfoBar.style.display = DISPLAY_NONE;
   } else {
     let invokeBefore = function () {
       let url = loginSubmitContextPath + "auth/self-info";
@@ -252,8 +255,8 @@ function showLoginedInfoBar(userInfo) {
       saveUserInfo(userInfo);
       let nicknameSpan = loginedInfoBar.querySelector(".nickname");
       nicknameSpan.textContent = userInfo.nickname;
-      loginedInfoBar.style.display = "block";
-      needLoginInfoBar.style.display = "none";
+      loginedInfoBar.style.display = DISPLAY_REVERT;
+      needLoginInfoBar.style.display = DISPLAY_NONE;
     };
     fetchAndCheck(invokeBefore, invokeAfter);
   }
@@ -396,7 +399,7 @@ export function init(afterLogin, requireStartLogin, loginBarElement) {
     loginBarElement = document.getElementById(loginBarElement);
   }
   needLoginInfoBar = document.getElementById("needLoginInfoBar");
-  needLoginInfoBar.style.display = "inline";
+  needLoginInfoBar.style.display = DISPLAY_REVERT;
   loginBarElement.appendChild(needLoginInfoBar);
   let loginAnchor = needLoginInfoBar.querySelector(".loginAnchor");
   loginAnchor.onclick = function () {
