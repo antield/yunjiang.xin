@@ -454,3 +454,10 @@ export function regulateRestResult(resultObj) {
     }
   }
 }
+
+/**
+ * 检查字符串中是否包含无效字符（如用于编码检测 ）
+ */
+export function containsInvalidChars(text) {
+  return /\uFFFD/.test(text);
+}

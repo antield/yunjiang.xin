@@ -1,5 +1,7 @@
 import * as AssistTool from "../module/assistTool.js";
 
+let fetchExecutor = null;
+
 const DISPLAY_REVERT = "revert";
 const DISPLAY_NONE = "none";
 
@@ -49,10 +51,10 @@ function clearUserInfo() {
   localStorage.removeItem(userInfoKey);
 }
 
-export function checkLogin() {
+export function checkLogin(tip) {
   let tokenStr = getTokenStr();
   if (tokenStr == null || tokenStr == "") {
-    return openLoginPromise();
+    return openLoginPromise(tip);
   } else {
     let userInfo = getUserInfo();
     showLoginedInfoBar(userInfo);
@@ -206,14 +208,14 @@ function loginSubmit(form, resolve) {
   let invokeBeforeFn = function (tip) {
     let invokeBefore;
     if (requireCaptchaMap[username]) {
-      invokeBefore = openCaptchaPromise(contentObj, tip).then(loginSubmitFetch).then(AssistTool.checkRespOkToJson);
+      invokeBefore = openCaptchaPromise(contentObj, tip).then(loginSubmitFetch);
     } else {
-      invokeBefore = loginSubmitFetch(contentObj).then(AssistTool.checkRespOkToJson);
+      invokeBefore = loginSubmitFetch(contentObj);
     }
     return invokeBefore;
   };
   let invokeAfter = function (resultObj) {
-    resultObj = AssistTool.regulateRestResult(resultObj);
+    // resultObj = AssistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
       showTipDivMsg(loginResultTip, resultObj.message);
       return;
@@ -225,7 +227,8 @@ function loginSubmit(form, resolve) {
     showLoginedInfoBar();
   };
 
-  fetchAndCheck(invokeBeforeFn, invokeAfter, username);
+  // fetchAndCheck(invokeBeforeFn, invokeAfter, username);
+  fetchExecutor.execute(invokeBeforeFn, null, true, invokeAfter, showTipDivMsg, username);
 }
 
 function showLoginedInfoBar(userInfo) {
@@ -392,7 +395,9 @@ function enableRequireCaptchaWindow(username) {
 }
 
 
-export function init(afterLogin, requireStartLogin, loginBarElement) {
+export function init(afterLogin, requireStartLogin, loginBarElement, fetchExecutorParam) {
+  fetchExecutor = fetchExecutorParam;
+
   loginBoard = document.getElementById("loginBoard");
   loginResultTip = loginBoard.querySelector(".loginResultTip");
   if (typeof loginBarElement == "string") {
