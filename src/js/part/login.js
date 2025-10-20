@@ -1,4 +1,4 @@
-import * as AssistTool from "../module/assistTool.js";
+import * as assistTool from "../module/assistTool.js";
 
 let fetchExecutor = null;
 
@@ -65,7 +65,7 @@ export function checkLogin(tip) {
 function openRegisterPromise(tip) {
   registerBoard.style.display = DISPLAY_REVERT;
   if (registerBoardDialog == null)
-    registerBoardDialog = AssistTool.showMessageDialog(registerBoard);
+    registerBoardDialog = assistTool.showMessageDialog(registerBoard);
   if (!registerBoardDialog.open)
     registerBoardDialog.showModal();
   return new Promise(function (resolve, reject) {
@@ -89,10 +89,11 @@ function openRegisterPromise(tip) {
   });
 }
 
-function openLoginPromise(tip) {
+export function openLoginPromise(tip) {
+  clearLoginStorge();
   loginBoard.style.display = DISPLAY_REVERT;
   if (loginBoardDialog == null)
-    loginBoardDialog = AssistTool.showMessageDialog(loginBoard);
+    loginBoardDialog = assistTool.showMessageDialog(loginBoard);
   if (!loginBoardDialog.open)
     loginBoardDialog.showModal();
   if (tip != null) {
@@ -126,7 +127,7 @@ function openCaptchaPromise(contentObj, tip) {
   let captchaBoard = document.getElementById("captchaBoard");
   captchaBoard.style.display = DISPLAY_REVERT;
   if (captchaDialog == null) {
-    captchaDialog = AssistTool.showMessageDialog(captchaBoard);
+    captchaDialog = assistTool.showMessageDialog(captchaBoard);
   }
   if (!captchaDialog.open) {
     captchaDialog.showModal();
@@ -136,13 +137,17 @@ function openCaptchaPromise(contentObj, tip) {
     showTipDivMsg(captchaTipDiv, tip);
   }
   let captchaPromise = new Promise(function (resolve, reject) {
-    let url = loginSubmitContextPath + "auth/captcha-image";
-    return fetch(url, {
-      headers: new Headers({
-        'Content-Type': 'application/json',
+    let captchaPromise = function () {
+      let url = loginSubmitContextPath + "auth/captcha-image";
+      return fetch(url, {
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
       })
-    }).then(AssistTool.checkRespOkToJson).then(function (resultObj) {
-      resultObj = AssistTool.regulateRestResult(resultObj);
+    };
+
+    let captchaConsumer = function (resultObj) {
+      resultObj = assistTool.regulateRestResult(resultObj);
       if (!resultObj.success) {
         showTipDivMsg(captchaTipDiv, resultObj.message);
         return;
@@ -173,7 +178,11 @@ function openCaptchaPromise(contentObj, tip) {
         clearTipDivMsg(captchaTipDiv);
         resolve(contentObj);
       }
-    })
+    }
+    let showMessageFn = function (tip) {
+      showTipDivMsg(captchaTipDiv, tip);
+    }
+    fetchExecutor.execute(captchaPromise, captchaConsumer, showMessageFn);
   });
   return captchaPromise;
 }
@@ -205,6 +214,9 @@ function loginSubmit(form, resolve) {
     username,
     password,
   };
+  let showTipDivMsgFn = function (tip) {
+    showTipDivMsg(loginResultTip, tip);
+  };
   let invokeBeforeFn = function (tip) {
     let invokeBefore;
     if (requireCaptchaMap[username]) {
@@ -217,9 +229,21 @@ function loginSubmit(form, resolve) {
   let invokeAfter = function (resultObj) {
     // resultObj = AssistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
+      if (resultObj.code == "REQUIRE_CAPTCHA") {
+        enableRequireCaptchaWindow(username);
+        return fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn, username);
+      } else if (resultObj.code == "CAPTCHA_ERROR") {
+        enableRequireCaptchaWindow(username);
+        let invokeBeforeTipFn = function () {
+          return invokeBeforeFn("验证码校验失败，请重新操作");
+        };
+        return fetchExecutor.execute(invokeBeforeTipFn, invokeAfter, showTipDivMsgFn, username);
+      }
+
       showTipDivMsg(loginResultTip, resultObj.message);
       return;
     }
+
     let tokenStr = resultObj.data;
     saveTokenStr(tokenStr);
     loginBoardDialog.close();
@@ -227,8 +251,7 @@ function loginSubmit(form, resolve) {
     showLoginedInfoBar();
   };
 
-  // fetchAndCheck(invokeBeforeFn, invokeAfter, username);
-  fetchExecutor.execute(invokeBeforeFn, null, true, invokeAfter, showTipDivMsg, username);
+  fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn, username);
 }
 
 function showLoginedInfoBar(userInfo) {
@@ -246,12 +269,12 @@ function showLoginedInfoBar(userInfo) {
           'Content-Type': 'application/json',
           'manage-token': getTokenStr(),
         })
-      }).then(AssistTool.checkRespOkToJson);
+      });
     };
     let invokeAfter = function (resultObj) {
-      resultObj = AssistTool.regulateRestResult(resultObj);
+      resultObj = assistTool.regulateRestResult(resultObj);
       if (!resultObj.success) {
-        AssistTool.showMessageTip(resultObj.message);
+        assistTool.showMessageTip(resultObj.message);
         return;
       }
       userInfo = resultObj.data;
@@ -261,7 +284,7 @@ function showLoginedInfoBar(userInfo) {
       loginedInfoBar.style.display = DISPLAY_REVERT;
       needLoginInfoBar.style.display = DISPLAY_NONE;
     };
-    fetchAndCheck(invokeBefore, invokeAfter);
+    fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showMessageTip);
   }
 }
 
@@ -307,11 +330,10 @@ function registerSubmit(form, resolve) {
   let submitButtons = form.querySelectorAll("[type='submit']");
   let invokeBeforeFn = function (tip) {
     submitButtons.forEach(a => a.disabled = true);
-    return registerSubmitFetch(contentObj).then(AssistTool.checkRespOkToJson);
+    return openCaptchaPromise(contentObj, tip).then(registerSubmitFetch);
   };
   let invokeAfter = function (resultObj) {
-    submitButtons.forEach(a => a.disabled = false);
-    resultObj = AssistTool.regulateRestResult(resultObj);
+    resultObj = assistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
       showTipDivMsg(registerTipDiv, resultObj.message);
       return;
@@ -320,31 +342,35 @@ function registerSubmit(form, resolve) {
     registerBoardDialog.close();
     resolve(username);
   };
-  invokeBeforeFn().then(invokeAfter).catch(function (err) {
+  let showTipDivMsgFn = function (tip) {
+    showTipDivMsg(registerTipDiv, tip);
+  };
+  fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn).finally(function () {
     submitButtons.forEach(a => a.disabled = false);
-    console.error(err);
   });
 }
 
 function logout() {
-  let url = loginSubmitContextPath + "auth/logout";
-  fetch(url, {
-    method: 'GET',
-    headers: new Headers({
-      'Content-Type': 'application/json',
-      'manage-token': getTokenStr(),
-    })
-  }).then(AssistTool.checkRespOkToJson).then(function (resultObj) {
-    resultObj = AssistTool.regulateRestResult(resultObj);
+  let logoutFetch = function () {
+    let url = loginSubmitContextPath + "auth/logout";
+    return fetch(url, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'manage-token': getTokenStr(),
+      })
+    });
+  };
+  let logoutConsumer = function (resultObj) {
+    resultObj = assistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
-      AssistTool.showMessageTip(resultObj.message);
-      return;
+      assistTool.showMessageTip(resultObj.message);
+      console.error(resultObj.message);
     }
-
+  }
+  fetchExecutor.execute(logoutFetch, logoutConsumer, assistTool.showMessageTip).finally(function () {
     clearLoginStorge();
     location.reload();
-  }, function (error) {
-    console.error('退出请求错误:', error);
   });
 }
 
@@ -353,35 +379,9 @@ function clearLoginStorge() {
   clearUserInfo();
 }
 
-export function fetchAndCheck(invokeBeforeFn, invokeAfter, data) {
-  return invokeBeforeFn().then(resultObj => checkResultCode(resultObj, invokeBeforeFn, data)).then(invokeAfter);
-}
-
-export function checkResultCode(resultObj, invokeBeforeFn, data) {
-  if (resultObj.code == 401) {
-    clearLoginStorge();
-    return openLoginPromise("当前登录已失效，请重新登录").then(function (loginSuccess) {
-      if (loginSuccess) {
-        return invokeBeforeFn().then(resultObj => checkResultCode(resultObj, invokeBeforeFn, data));
-      }
-    });
-  } else if (resultObj.code == 10001) {
-    let enabled = enableRequireCaptchaWindow(data);
-    if (!enabled)
-      return Promise.reject("开启验证码校验失败");
-    return invokeBeforeFn().then(resultObj => checkResultCode(resultObj, invokeBeforeFn, data));
-  } else if (resultObj.code == 10002) {
-    let enabled = enableRequireCaptchaWindow(data);
-    if (!enabled)
-      return Promise.reject("开启验证码校验失败");
-    return invokeBeforeFn("验证码校验失败，请重新操作").then(resultObj => checkResultCode(resultObj, invokeBeforeFn, data));
-  } else {
-    return resultObj;
-  }
-}
-
 function enableRequireCaptchaWindow(username) {
   if (username == null || username.toString().trim() == "") {
+    console.error("开启验证码校验失败，用户名无效");
     return false;
   }
   requireCaptchaMap[username] = true;
@@ -393,7 +393,6 @@ function enableRequireCaptchaWindow(username) {
   }, 1000 * 60 * 60 * 2);
   return true;
 }
-
 
 export function init(afterLogin, requireStartLogin, loginBarElement, fetchExecutorParam) {
   fetchExecutor = fetchExecutorParam;

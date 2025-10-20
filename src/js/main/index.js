@@ -1,9 +1,10 @@
 import '@material/web/switch/switch.js';
-import * as AssistTool from "../module/assistTool.js";
-import * as LoginModule from "../part/login.js";
+import * as assistTool from "../module/assistTool.js";
+import * as loginModule from "../part/login.js";
+import * as fetchExecutor from "../module/fetchExecutor.js";
 
 function getTokenStr() {
-  return LoginModule.getTokenStr();
+  return loginModule.getTokenStr();
 }
 
 function uploadImage(formData, imgElement, inputHidden) {
@@ -15,19 +16,18 @@ function uploadImage(formData, imgElement, inputHidden) {
         'Authorization': getTokenStr(),
       }),
       body: formData,
-    }).then(AssistTool.checkRespOkToJson);
+    });
   };
   let invokeAfter = function (resultObj) {
-    resultObj = AssistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
-      AssistTool.showMessageTip(resultObj.message);
+      assistTool.showMessageTip(resultObj.message);
       return;
     }
     let picUrl = resultObj.data;
     imgElement.src = poiManageApiUrl + picUrl;
     inputHidden.value = picUrl;
   };
-  LoginModule.fetchAndCheck(invokeBefore, invokeAfter);
+  fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showMessageTip);
 }
 
 function initData() {
@@ -35,12 +35,13 @@ function initData() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  fetchExecutor.init(loginModule.openLoginPromise);
   let afterLogin = function (loginResult) {
     if (loginResult) {
       initData();
     }
   };
-  LoginModule.init(afterLogin, false, "loginBar");
+  loginModule.init(afterLogin, false, "loginBar", fetchExecutor);
 });
 
-window.AssistTool = AssistTool;
+window.AssistTool = assistTool;

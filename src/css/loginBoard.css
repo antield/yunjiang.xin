@@ -37,6 +37,31 @@
   box-sizing: border-box;
 }
 
+#registerForm .inputElement {
+  width: 300px;
+}
+
+.indentBox {
+  position: relative;
+}
+
+.indentLabel {
+  position: absolute;
+  top: 50%;
+  padding-left: 0.75em;
+  transform: translateY(-50%);
+}
+
+.indentLabel+input[type="text"],
+.indentLabel+input[type="password"] {
+  padding-left: 6em;
+}
+
+#registerForm .indentLabel+input[type="text"],
+#registerForm .indentLabel+input[type="password"] {
+  padding-left: 7em;
+}
+
 .loginSubmitRow {
   padding: 0.75em 0;
 }
@@ -62,6 +87,11 @@
   box-sizing: border-box;
   width: 260px;
   height: 36px;
+}
+
+#registerForm .submitButton,
+#registerForm .secondaryButton {
+  width: 300px;
 }
 
 #croppedImageInput::-webkit-slider-thumb {
