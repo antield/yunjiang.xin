@@ -195,11 +195,13 @@
   <form class="loginForm" action="javascript:;">
     <h4 class="loginFormTitle"><span class="material-icons"
         style="margin-right:0.25em;vertical-align:middle;">account_circle</span>系统登录</h4>
-    <div class="inputRow">
-      <input id="username" name="username" label="账户名" placeholder="账户名" class="inputElement" required />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="username">账号名</label>
+      <input type="text" id="username" name="username" title="账号名" placeholder="请输入" class="inputElement" required />
     </div>
-    <div class="inputRow">
-      <input type="password" id="password" name="password" class="inputElement" label="密码" placeholder="密码" required />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="password">密码</label>
+      <input type="password" id="password" name="password" title="密码" placeholder="请输入" class="inputElement" required />
     </div>
     <div class="loginResultTip" style="display: none;">
       <span class="material-icons">error</span>
@@ -243,26 +245,35 @@
 
 <div id="registerBoard" style="display: none;">
   <form id="registerForm" action="javascript:;" style="padding: 1em 2em;">
-    <div class="inputRow">
-      <input id="registerUsername" name="username" label="账户名" placeholder="账户名" class="inputElement" size="63"
-        required />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerUsername">账号名</label>
+      <input type="text" id="registerUsername" name="username" title="账号名" placeholder="请输入" class="inputElement"
+        size="63" autocomplete="off" required />
     </div>
-    <div class="inputRow">
-      <input type="password" id="registerPassword" name="password" class="inputElement" label="密码" placeholder="密码"
-        size="63" required />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerPassword">密码</label>
+      <input type="password" id="registerPassword" name="password" class="inputElement" title="密码" placeholder="请输入"
+        size="63" autocomplete="off" required />
     </div>
-    <div class="inputRow">
-      <input type="password" id="registerPasswordConfirm" name="passwordConfirm" class="inputElement" label="密码确认"
-        placeholder="密码确认" size="63" required />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerPasswordConfirm">密码确认</label>
+      <input type="password" id="registerPasswordConfirm" name="passwordConfirm" class="inputElement" title="密码确认"
+        placeholder="请输入" size="63" autocomplete="off" required />
     </div>
-    <div class="inputRow">
-      <input type="text" id="nickname" name="nickname" label="昵称" placeholder="昵称" class="inputElement" size="63" />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerNickname">昵称</label>
+      <input type="text" id="registerNickname" name="nickname" title="昵称" placeholder="请输入" class="inputElement"
+        size="63" autocomplete="off" />
     </div>
-    <div class="inputRow">
-      <input type="text" id="phone" name="phone" label="手机" placeholder="电话" class="inputElement" size="63" />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerPhone">手机</label>
+      <input type="text" id="registerPhone" name="phone" title="手机" placeholder="请输入" class="inputElement" size="63"
+        autocomplete="off" />
     </div>
-    <div class="inputRow">
-      <input type="text" id="mail" name="mail" label="邮箱" placeholder="邮箱" class="inputElement" size="255" />
+    <div class="inputRow indentBox">
+      <label class="indentLabel" for="registerMail">邮箱</label>
+      <input type="text" id="registerMail" name="mail" title="邮箱" placeholder="请输入" class="inputElement" size="255"
+        autocomplete="off" />
     </div>
     <div id="registerTip" class="loginResultTip" style="display: none;">
       <span class="material-icons">error</span>
