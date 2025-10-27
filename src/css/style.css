@@ -25,6 +25,10 @@ a:visited {
     color: var(--main-link-color);
 }
 
+.dialogCloseButton {
+    background-color: white;
+}
+
 .dialogCloseButton:hover {
     background-color: #dcdcdc;
 }
