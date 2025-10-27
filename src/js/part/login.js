@@ -1,413 +1,486 @@
-import * as assistTool from "../module/assistTool.js";
+/**
+ * 辅助工具类 by Antield
+ * https://antield.cnblogs.com/
+ *
+ * @type {Javascript}
+ */
 
-let fetchExecutor = null;
+import dialogPolyfill from "dialog-polyfill";
 
-const DISPLAY_REVERT = "revert";
-const DISPLAY_NONE = "none";
-
-let loginBoard = null;
-let loginedInfoBar = null;
-let needLoginInfoBar = null;
-let loginResultTip = null;
-
-let loginBoardDialog = null;
-
-let registerBoard = null;
-let registerBoardDialog = null;
-
-const requireCaptchaMap = {};
-const requireCaptchaTimeoutIdMap = {};
-let captchaDialog = null;
-
-let userInfo = null;
-
-function keySuffix() {
-  return loginSubmitContextPath.replaceAll(/[:/.]+/g, "_");
-}
-
-export function getTokenStr() {
-  let tokenKey = "token_" + keySuffix();
-  let token = localStorage.getItem(tokenKey);
-  return token || "";
-}
-function saveTokenStr(tokenStr) {
-  let tokenKey = "token_" + keySuffix();
-  localStorage.setItem(tokenKey, tokenStr);
-}
-function clearTokenStr() {
-  let tokenKey = "token_" + keySuffix();
-  localStorage.removeItem(tokenKey);
-}
-
-export function checkLogin(tip) {
-  let tokenStr = getTokenStr();
-  if (tokenStr == null || tokenStr == "") {
-    return openLoginPromise(tip);
-  } else {
-    showLoginedInfoBar();
-    return Promise.resolve(true);
-  }
-}
-
-function openRegisterPromise(tip) {
-  registerBoard.style.display = DISPLAY_REVERT;
-  if (registerBoardDialog == null) registerBoardDialog = assistTool.showMessageDialog(registerBoard);
-  if (!registerBoardDialog.open) registerBoardDialog.showModal();
-  return new Promise(function (resolve, reject) {
-    let form = registerBoard.querySelector("form");
-    let usernameInput = form.querySelector("#registerUsername");
-    let registerTipDiv = registerBoard.querySelector("#registerTip");
-    if (usernameInput.oninput == null) {
-      usernameInput.oninput = function () {
-        clearTipDivError(registerTipDiv);
-      };
-    }
-    form.onsubmit = function () {
-      registerSubmit(this, resolve);
-    };
-    let cancelButton = form.querySelector("#cancelRegisterButton");
-    if (cancelButton.onclick == null) {
-      cancelButton.onclick = function () {
-        registerBoardDialog.close();
-      };
-    }
-  });
-}
-
-export function openLoginPromise(tip) {
-  clearLoginStorge();
-  loginBoard.style.display = DISPLAY_REVERT;
-  if (loginBoardDialog == null) loginBoardDialog = assistTool.showMessageDialog(loginBoard);
-  if (!loginBoardDialog.open) loginBoardDialog.showModal();
-  if (tip != null) {
-    showTipDivError(loginResultTip, tip);
-  }
-  return new Promise(function (resolve, reject) {
-    let form = loginBoard.querySelector("form");
-    let usernameInput = form.querySelector("#username");
-    if (usernameInput.oninput == null) {
-      usernameInput.oninput = function () {
-        clearTipDivError(loginResultTip);
-      };
-    }
-    form.onsubmit = function () {
-      loginSubmit(this, resolve);
-    };
-  });
-}
-
-function showTipDivError(tipDiv, msg) {
-  tipDiv.style.display = DISPLAY_REVERT;
-  tipDiv.querySelector(".errorMsg").textContent = msg;
-}
-
-function clearTipDivError(tipDiv) {
-  tipDiv.style.display = DISPLAY_NONE;
-  tipDiv.querySelector(".errorMsg").textContent = "";
-}
-
-function openCaptchaPromise(contentObj, tip) {
-  let captchaBoard = document.getElementById("captchaBoard");
-  captchaBoard.style.display = DISPLAY_REVERT;
-  if (captchaDialog == null) {
-    captchaDialog = assistTool.showMessageDialog(captchaBoard);
-  }
-  if (!captchaDialog.open) {
-    captchaDialog.showModal();
-  }
-  let captchaTipDiv = captchaBoard.querySelector("#captchaTip");
-  if (tip != null) {
-    showTipDivError(captchaTipDiv, tip);
-  }
-  let captchaPromise = new Promise(function (resolve, reject) {
-    let captchaPromise = function () {
-      let url = loginSubmitContextPath + "auth/captcha-image";
-      return fetch(url, {
-        headers: new Headers({
-          "Content-Type": "application/json",
-        }),
+/**
+ * Object.fromEntries folyfill
+ */
+if (typeof Object.fromEntries != "function") {
+  Object.fromEntries = function (iterable) {
+    var entries = "entries" in iterable ? iterable.entries() : iterable;
+    var object = {};
+    var entry;
+    while ((entry = entries.next()) && !entry.done) {
+      var pair = entry.value;
+      Object.defineProperty(object, pair[1][0], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: pair[1][1],
       });
-    };
+    }
+    return object;
+  };
+}
 
-    let captchaConsumer = function (resultObj) {
-      resultObj = assistTool.regulateRestResult(resultObj);
-      if (!resultObj.success) {
-        showTipDivError(captchaTipDiv, resultObj.message);
-        return;
+/**
+ * 对数组元素进行分组
+ * @param  {Array}   array 需分组的数组
+ * @param  {Function} fn    分组依据函数
+ * @return {Array}         分组结果
+ */
+export function groupBy(array, fn) {
+  let groups = {};
+  array.forEach(function (o) {
+    let group = fn(o);
+    groups[group] = groups[group] || [];
+    groups[group].push(o);
+  });
+  return Object.keys(groups).map(function (group) {
+    return {
+      key: group,
+      list: groups[group],
+    };
+  });
+}
+
+/**
+ * 对值或内容进行HTML编码
+ * @param  {string} content             需要编码的值或内容
+ * @param  {boolean} replaceBreakLine 是否替换换行符为<br/>（可不传）
+ * @return {string}                  转换过的html
+ */
+export function encodeValueHtml(content, replaceBreakLine) {
+  let html = content.replace(/\&/gm, "&amp;"); //&#38;
+  html = html.replace(/\"/gm, "&quot;"); //&#34;
+  html = html.replace(/\'/gm, "&apos;"); //&#39;
+  html = html.replace(/\</gm, "&lt;"); //&#60;
+  html = html.replace(/\>/gm, "&gt;"); //&#62;
+  if (replaceBreakLine === true) html = html.replace(/\r?\n/gm, "<br/>"); //&#62;
+  return html;
+}
+
+function getTemplatePieceRegex() {
+  let regex1 = "(\\{\\+?[_a-zA-Z]\\w{1,254}?(?:\\?\\?.+)?\\})";
+  let regex2 = "(\\{[_a-zA-Z]\\w{1,254}?\\?[\\S]{1,254}?\\:[\\S]{0,254}?\\})";
+  let regex3 = "(\\{[_a-zA-Z]\\w{1,254}?:display-\\w[\\w-]{0,64}?\\w\\})";
+  let regex4 = '(\\[[_a-zA-Z][\\w-:]{1,254}\\]="\\{\\?[_a-zA-Z]\\w{1,254}?}[^"]*?")';
+  let regex5 = "(<!--\\{\\+\\+[_a-zA-Z]\\w{1,254}?(?:\\?\\?.+)?\\}-->)";
+  let regexStr = regex1 + "|" + regex2 + "|" + regex3 + "|" + regex4 + "|" + regex5;
+  let regex = new RegExp(regexStr, "g");
+  return regex;
+}
+const templatePieceRegex = getTemplatePieceRegex();
+
+/**
+ * 将指定的模板HTML用指定的对象属性替换
+ * 目前支持5种格式替换：
+ *  1. {+fieldName??defaultValue} 替换为 fieldValue，加号“+”和双问号后部分“??defaultValue”是可选项，
+ *     当存在“+”，fieldValue原样替换，不进行HTML编码，defaultValue作为当fieldValue为undefined或null时的替代项
+ *  2. {booleanField?content1:content2} 当booleanField为真，替换为content1，否则为content2
+ *  3. {booleanField:display-displayValue} 当booleanField为false，替换为"display:none;"，
+ *     undefined和null视为true，值为true替换为"display:displayValue;"
+ *  4. [property]="{?booleanField}propertyValue" 当booleanField为true，输出该属性，
+ *     为false则不输出，属性值可不设，不设时省略，undefined和null视为false
+ *  5. <!--{++fieldName??defaultValue}--> 替换为 fieldValue，双问号后部分“??defaultValue”是可选项，
+ *     该格式下fieldValue原样替换，不进行HTML编码，defaultValue作为当fieldValue为undefined或null或空字符串时的替代项，
+ *     此规则常置于tbody等标签下，tbody标签不允许直接出现文本，若出现，文本会被移置到table标签之前
+ *
+ * @param  {string} template 模板HTML
+ * @param  {object} obj      用来替换的对象
+ * @return {string}          生成的HTML
+ */
+export function replaceTemplateWithObject(template, obj) {
+  return template.replace(templatePieceRegex, function (match, p1, p2, p3, p4, p5) {
+    if (p1) {
+      let matchedText = p1;
+      let isHtmlContent = matchedText.indexOf("+") === 1;
+      let textPartEnd = matchedText.length - 1;
+      let keyPosStart = isHtmlContent ? 2 : 1;
+      let defaultValuePartPos = matchedText.indexOf("??");
+      let keyPosEnd = defaultValuePartPos < 0 ? textPartEnd : defaultValuePartPos;
+      let key = matchedText.substring(keyPosStart, keyPosEnd);
+      let pValue = obj[key];
+      let pValueNotExist = pValue == undefined;
+      let html;
+      if (pValueNotExist) {
+        if (defaultValuePartPos < 0) {
+          html = "";
+        } else {
+          let defaultValueStr = matchedText.substring(defaultValuePartPos + 2, textPartEnd);
+          if (isHtmlContent) html = defaultValueStr;
+          else html = encodeValueHtml(defaultValueStr);
+        }
+      } else {
+        if (isHtmlContent) html = pValue;
+        else html = encodeValueHtml(pValue.toString());
       }
-
-      let data = resultObj.data;
-      let captchaImageUrl = data.bgImage;
-      let captchaImage = captchaBoard.querySelector("#captchaImage");
-      captchaImage.src = captchaImageUrl;
-      let croppedImageUrl = data.croppedImage;
-      let croppedImage = captchaBoard.querySelector("#croppedImage");
-      croppedImage.src = croppedImageUrl;
-      let offSetY = data.offSetY;
-      croppedImage.style.top = offSetY + "px";
-      croppedImage.style.left = "0";
-      let croppedImageInput = captchaBoard.querySelector("#croppedImageInput");
-      croppedImageInput.value = "0";
-      croppedImageInput.oninput = function () {
-        croppedImage.style.left = this.value + "px";
-      };
-      let captchaSubmitButton = captchaBoard.querySelector("#captchaSubmitButton");
-      captchaSubmitButton.onclick = function () {
-        contentObj.captchaId = data.captchaId;
-        contentObj.captchaCode = parseInt(croppedImageInput.value);
-        captchaDialog.close();
-        croppedImage.style.top = "0";
-        croppedImage.style.left = "0";
-        clearTipDivError(captchaTipDiv);
-        resolve(contentObj);
-      };
-    };
-    let showMessageFn = function (tip) {
-      showTipDivError(captchaTipDiv, tip);
-    };
-    fetchExecutor.execute(captchaPromise, captchaConsumer, showMessageFn);
+      return html;
+    }
+    if (p2) {
+      let matchedText = p2;
+      let key = matchedText.substring(1, matchedText.indexOf("?"));
+      let pValue = obj[key];
+      let ifTrueValue = matchedText.substring(matchedText.indexOf("?") + 1, matchedText.indexOf(":"));
+      let ifFalseValue = matchedText.substring(matchedText.indexOf(":") + 1, matchedText.length - 1);
+      let replaceStr = pValue == true ? ifTrueValue : ifFalseValue;
+      return replaceStr;
+    }
+    if (p3) {
+      let matchedText = p3;
+      let fieldBoundaryPos = matchedText.indexOf(":");
+      let key = matchedText.substring(1, fieldBoundaryPos);
+      let pValue = obj[key];
+      let pValueFalse = pValue == false;
+      let html;
+      if (pValueFalse) {
+        html = "display:none;";
+      } else {
+        let displayValuePos = matchedText.indexOf("-", fieldBoundaryPos) + 1;
+        let displayValue = matchedText.substring(displayValuePos, matchedText.length - 1);
+        html = "display:" + displayValue + ";";
+      }
+      return html;
+    }
+    if (p4) {
+      let matchedText = p4;
+      let leftBracketPos = matchedText.indexOf("{");
+      let rightBracketPos = matchedText.indexOf("}");
+      let key = matchedText.substring(leftBracketPos + 2, rightBracketPos);
+      let pValue = obj[key];
+      let pValueTrue = pValue == true;
+      if (!pValueTrue) {
+        return "";
+      } else {
+        let leftBracketAttrPos = matchedText.indexOf("[");
+        let rightBracketAttrPos = matchedText.indexOf("]");
+        let attr = matchedText.substring(leftBracketAttrPos + 1, rightBracketAttrPos);
+        let leftBracketValuePos = matchedText.indexOf("}");
+        let rightBracketValuePos = matchedText.lastIndexOf('"');
+        let value = matchedText.substring(leftBracketValuePos + 1, rightBracketValuePos);
+        if (value == "") {
+          return attr;
+        } else {
+          return attr + '="' + value + '"';
+        }
+      }
+    }
+    if (p5) {
+      let matchedText = p5;
+      let textPartEnd = matchedText.length - 4;
+      let keyPosStart = 7;
+      let defaultValuePartPos = matchedText.indexOf("??");
+      let keyPosEnd = defaultValuePartPos < 0 ? textPartEnd : defaultValuePartPos;
+      let key = matchedText.substring(keyPosStart, keyPosEnd);
+      let pValue = obj[key];
+      let pValueNotExist = pValue == undefined || pValue == "";
+      let html;
+      if (pValueNotExist) {
+        if (defaultValuePartPos < 0) html = "";
+        else html = matchedText.substring(defaultValuePartPos + 2, textPartEnd);
+      } else {
+        html = pValue;
+      }
+      return html;
+    }
   });
-  return captchaPromise;
 }
 
-function loginSubmitFetch(contentObj) {
-  let url = loginSubmitContextPath + "auth/login";
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(contentObj),
-    headers: new Headers({
-      "Content-Type": "application/json",
-    }),
-  });
+/**
+ * 显示页面消息提示
+ * @param  {string|HTMLElement} messageHtml 需要显示的消息的HTML或节点对象
+ * @return {HTMLDialogElement}             对话框对象
+ */
+export function showMessageTip(messageHtml) {
+  messageHtml =
+    '<span class="material-icons" style="color:dodgerblue;margin-right:0.75em;vertical-align:middle;">info</span>' +
+    '<span style="color:dodgerblue">' +
+    messageHtml +
+    "</span>";
+  let dialog = showMessageDialog(messageHtml, true, true);
+  dialog.style.marginTop = "80px";
+  dialog.blur();
+  return dialog;
 }
 
-function loginSubmit(form, resolve) {
-  let formData = new FormData(form);
-  let username = formData.get("username").trim();
-  if (username == "") {
-    showTipDivError(loginResultTip, "请输入用户名");
-    return;
+/**
+ * 显示页面错误消息提示
+ * @param  {string|HTMLElement} messageHtml 需要显示的错误消息的HTML或节点对象
+ * @return {HTMLDialogElement}             对话框对象
+ */
+export function showErrorTip(messageHtml) {
+  messageHtml =
+    '<span class="material-icons" style="color:firebrick;margin-right:0.75em;vertical-align:middle;">error</span>' +
+    '<span style="color:firebrick">' +
+    messageHtml +
+    "</span>";
+  let dialog = showMessageDialog(messageHtml, true, true);
+  dialog.style.marginTop = "80px";
+  dialog.blur();
+  return dialog;
+}
+
+/**
+ * 显示页面消息对话框
+ * @param  {string|HTMLElement} messageHtml 需要显示的消息的HTML或节点对象
+ * @param  {boolean} forAMoment  消息框是否在一段时间后关闭
+ * @param  {boolean} noModal     不显示幕布背景
+ * @return {HTMLDialogElement}             对话框对象
+ */
+export function showMessageDialog(messageHtml, forAMoment, noModal) {
+  let dialog = document.createElement("dialog");
+  let needPloyFill = typeof HTMLDialogElement === "undefined";
+  if (needPloyFill) {
+    dialogPolyfill.registerDialog(dialog);
   }
-  let password = formData.get("password");
-  if (password == "") {
-    showTipDivError(loginResultTip, "请输入密码");
-    return;
+
+  if (typeof messageHtml === "string") {
+    dialog.innerHTML = messageHtml;
+  } else if (messageHtml instanceof HTMLElement) {
+    dialog.appendChild(messageHtml);
   }
-  let contentObj = {
-    username,
-    password,
-  };
-  let showTipDivMsgFn = function (tip) {
-    showTipDivError(loginResultTip, tip);
-  };
-  let invokeBeforeFn = function (tip) {
-    let invokeBefore;
-    if (requireCaptchaMap[username]) {
-      invokeBefore = openCaptchaPromise(contentObj, tip).then(loginSubmitFetch);
+  document.body.appendChild(dialog);
+  dialog.style.boxShadow = "0px 0px 2px 2px #d5d5d5";
+  dialog.style.borderRadius = "10px";
+  dialog.style.borderWidth = "1px";
+  dialog.style.borderColor = "#acacac";
+  if (noModal) {
+    if (needPloyFill) {
+      dialog.style.position = "fixed";
+      dialog.style.top = "50%";
+      dialog.style.transform = "translate(0, -50%)";
     } else {
-      invokeBefore = loginSubmitFetch(contentObj);
-    }
-    return invokeBefore;
-  };
-  let invokeAfter = function (resultObj) {
-    // resultObj = AssistTool.regulateRestResult(resultObj);
-    if (!resultObj.success) {
-      if (resultObj.code == "REQUIRE_CAPTCHA") {
-        enableRequireCaptchaWindow(username);
-        return fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn, username);
-      } else if (resultObj.code == "CAPTCHA_ERROR") {
-        enableRequireCaptchaWindow(username);
-        let invokeBeforeTipFn = function () {
-          return invokeBeforeFn("验证码校验失败，请重新操作");
-        };
-        return fetchExecutor.execute(invokeBeforeTipFn, invokeAfter, showTipDivMsgFn, username);
-      }
-
-      showTipDivError(loginResultTip, resultObj.message);
-      return;
+      dialog.style.top = "0";
+      dialog.style.bottom = "0";
     }
 
-    let tokenStr = resultObj.data;
-    saveTokenStr(tokenStr);
-    loginBoardDialog.close();
-    resolve(true);
-    showLoginedInfoBar();
-  };
-
-  fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn, username);
-}
-
-function showLoginedInfoBar() {
-  if (userInfo != null) {
-    let nicknameSpan = loginedInfoBar.querySelector(".nickname");
-    nicknameSpan.textContent = userInfo.nickname;
-    loginedInfoBar.style.display = DISPLAY_REVERT;
-    needLoginInfoBar.style.display = DISPLAY_NONE;
+    dialog.show();
   } else {
-    let invokeBefore = function () {
-      let url = loginSubmitContextPath + "auth/self-info";
-      return fetch(url, {
-        method: "GET",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          "manage-token": getTokenStr(),
-        }),
-      });
+    dialog.showModal();
+    if (needPloyFill) {
+      let backdrop = dialog.nextElementSibling;
+      backdrop.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+      backdrop.style.position = "fixed";
+      backdrop.style.top = "0";
+      backdrop.style.width = "100%";
+      backdrop.style.height = "100%";
+    }
+  }
+
+  if (forAMoment) {
+    setTimeout(function () {
+      //dialog.close();
+      dialog.parentNode.removeChild(dialog);
+    }, 5000);
+  } else {
+    let closeButton = document.createElement("div");
+    closeButton.className = "dialogCloseButton";
+    closeButton.style.position = "absolute";
+    closeButton.style.right = "0.5em";
+    closeButton.style.top = "0.5em";
+    closeButton.style.lineHeight = "1";
+    closeButton.style.borderRadius = "50%";
+    closeButton.style.cursor = "pointer";
+    let span = document.createElement("span");
+    span.className = "material-icons";
+    span.textContent = "close";
+    closeButton.appendChild(span);
+    dialog.appendChild(closeButton);
+    closeButton.onclick = function () {
+      dialog.close();
     };
-    let invokeAfter = function (resultObj) {
-      resultObj = assistTool.regulateRestResult(resultObj);
-      if (!resultObj.success) {
-        assistTool.showErrorTip(resultObj.message);
-        return;
+  }
+
+  return dialog;
+}
+
+/**
+ * 显示页面消息确认框
+ * @param  {string} message 确认提示消息
+ * @return {Promise}         确认结果Promise
+ */
+export function confirmDialog(message) {
+  return new Promise(function (resolve, reject) {
+    let infoDiv = document.createElement("div");
+    let iconSpan = document.createElement("span");
+    iconSpan.textContent = "提示：";
+    let msgSpan = document.createElement("span");
+    msgSpan.innerHTML = encodeValueHtml(message, true);
+    infoDiv.appendChild(iconSpan);
+    infoDiv.appendChild(msgSpan);
+    let submitRowDiv = document.createElement("div");
+    submitRowDiv.className = "submitRowDiv";
+    submitRowDiv.style.textAlign = "right";
+    submitRowDiv.style.marginTop = "1em";
+    let submitButton = document.createElement("input");
+    submitButton.type = "submit";
+    submitButton.value = "确定";
+    submitButton.className = "plainButton";
+    let cancelButton = document.createElement("input");
+    cancelButton.type = "button";
+    cancelButton.value = "取消";
+    cancelButton.className = "plainButton";
+    cancelButton.style.marginLeft = "1em";
+    submitRowDiv.appendChild(submitButton);
+    submitRowDiv.appendChild(cancelButton);
+    let boxDiv = document.createElement("div");
+    boxDiv.appendChild(infoDiv);
+    boxDiv.appendChild(submitRowDiv);
+    let dialog = showMessageDialog(boxDiv);
+    submitButton.onclick = function () {
+      dialog.parentNode.removeChild(dialog);
+      resolve(true);
+    };
+    cancelButton.onclick = function () {
+      dialog.parentNode.removeChild(dialog);
+      resolve(false);
+    };
+  });
+}
+
+/**
+ * 格式化日期为典型格式字符串，如："2019-12-21 11:09"
+ * @param  {Date} date                      日期时间
+ * @param  {boolean} withOutTime               是否舍去时间
+ * @param  {boolean} withJunctor               是否用字符“T”连接日期时间
+ * @param  {boolean} withSeconds               是否显示秒数
+ * @return {string}             格式化字符串
+ */
+export function formatDateTimeToTypicalString(date, withOutTime, withJunctor, withSeconds) {
+  let month = (date.getMonth() + 1).toString();
+  let day = date.getDate().toString();
+  let year = date.getFullYear().toString();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+  let dateStr = [year, month, day].join("-");
+
+  if (withOutTime == true) {
+    return dateStr;
+  }
+
+  let hour = date.getHours().toString();
+  let minute = date.getMinutes().toString();
+  if (hour.length < 2) hour = "0" + hour;
+  if (minute.length < 2) minute = "0" + minute;
+  let timeStr = hour + ":" + minute;
+  if (withSeconds == true) {
+    let seconds = date.getSeconds().toString();
+    if (seconds.length < 2) seconds = "0" + seconds;
+    timeStr += ":" + seconds;
+  }
+
+  let junctor = withJunctor ? "T" : " ";
+  let datetimeStr = dateStr + junctor + timeStr;
+  return datetimeStr;
+}
+
+/**
+ * 为日期字符串添加时区信息
+ * @param  {number} timezoneOffset         时区偏差（time-zone offset）表示协调世界时（UTC）与本地时区之间的差值，单位为分钟。可不传，此时取本地时区偏移量
+ * @param  {boolean} alreadyHasSeconds      原字符串已包含秒钟内容
+ * @param  {boolean} alreadyHasMilliseconds 原字符串已包含毫秒内容
+ * @return {string}                        需追加的时区信息字符串
+ */
+export function getTimezoneAppendStr(timezoneOffset, alreadyHasSeconds, alreadyHasMilliseconds) {
+  if (timezoneOffset == undefined) timezoneOffset = new Date().getTimezoneOffset();
+  let offsetAppendStr = ":00.000";
+  if (alreadyHasSeconds === true) offsetAppendStr = ".000";
+  if (alreadyHasMilliseconds === true) offsetAppendStr = "";
+
+  if (timezoneOffset == 0) {
+    return offsetAppendStr + "Z";
+  } else {
+    let positive = timezoneOffset <= 0;
+    let offsetMinutes = Math.abs(timezoneOffset);
+    let offsetHours = Math.floor(offsetMinutes / 60);
+    let remainMinutes = offsetMinutes % 60;
+    let hoursStr = offsetHours < 10 ? "0" + offsetHours.toString() : offsetHours.toString();
+    let minutesStr = remainMinutes < 10 ? "0" + remainMinutes.toString() : remainMinutes.toString();
+    return offsetAppendStr + (positive ? "+" : "-") + hoursStr + ":" + minutesStr;
+  }
+}
+
+/**
+ * 格式化日期为带时区信息的标准格式字符串，如："2019-12-21T11:09.000+08:00"
+ * @param  {Date} date 日期时间
+ * @return {string}      格式化的字符串
+ */
+export function formatDateTimeStringWithTimeZone(date) {
+  let typicalStr = formatDateTimeToTypicalString(date, false, true, true);
+  let millisecondes = date.getMilliseconds();
+  let millisecondesStr = millisecondes.toString();
+  if (millisecondes < 10) {
+    millisecondesStr = "00" + millisecondesStr;
+  } else if (millisecondes < 100) {
+    millisecondesStr = "0" + millisecondesStr;
+  }
+  let timeZoneAppendStr = getTimezoneAppendStr(date.getTimezoneOffset(), true, true);
+  let fullStr = typicalStr + "." + millisecondesStr + timeZoneAppendStr;
+  return fullStr;
+}
+
+/**
+ * 用于fetch的响应结果判断
+ * @param  {object} response Response对象
+ * @return {Promise}          返回JSON对象
+ */
+export function checkRespOkToJson(response) {
+  let contentType = response.headers.get("Content-Type");
+  let isJson = contentType != null && contentType.startsWith("application/json");
+  if (isJson) {
+    return response.json();
+  } else {
+    if (!response.ok) console.error("not response ok, status:" + response.status + ", statusText:" + response.statusText);
+    return response.text().then(function (text) {
+      try {
+        let obj = JSON.parse(text);
+        return obj;
+      } catch (ex) {
+        throw new Error("response error: text: " + text);
       }
-      userInfo = resultObj.data;
-      let nicknameSpan = loginedInfoBar.querySelector(".nickname");
-      nicknameSpan.textContent = userInfo.nickname;
-      loginedInfoBar.style.display = DISPLAY_REVERT;
-      needLoginInfoBar.style.display = DISPLAY_NONE;
-    };
-    fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showErrorTip);
-  }
-}
-
-function registerSubmitFetch(contentObj) {
-  let url = loginSubmitContextPath + "auth/register";
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(contentObj),
-    headers: new Headers({
-      "Content-Type": "application/json",
-    }),
-  });
-}
-
-function registerSubmit(form, resolve) {
-  let formData = new FormData(form);
-  let registerTipDiv = form.querySelector("#registerTip");
-  let username = formData.get("username").trim();
-  if (username == "") {
-    showTipDivError(registerTipDiv, "请输入用户名");
-    return;
-  }
-  let password = formData.get("password");
-  if (password == "") {
-    showTipDivError(registerTipDiv, "请输入密码");
-    return;
-  }
-  let passwordConfirm = formData.get("passwordConfirm");
-  if (password != passwordConfirm) {
-    showTipDivError(registerTipDiv, "两次密码不一致");
-    return;
-  }
-  let nickname = formData.get("nickname").trim();
-  let phone = formData.get("phone").trim();
-  let mail = formData.get("mail").trim();
-  let contentObj = {
-    username,
-    password,
-    nickname,
-    phone,
-    mail,
-  };
-  let submitButtons = form.querySelectorAll("[type='submit']");
-  let invokeBeforeFn = function (tip) {
-    submitButtons.forEach((a) => (a.disabled = true));
-    return openCaptchaPromise(contentObj, tip).then(registerSubmitFetch);
-  };
-  let invokeAfter = function (resultObj) {
-    resultObj = assistTool.regulateRestResult(resultObj);
-    if (!resultObj.success) {
-      showTipDivError(registerTipDiv, resultObj.message);
-      return;
-    }
-
-    registerBoardDialog.close();
-    resolve(username);
-  };
-  let showTipDivMsgFn = function (tip) {
-    showTipDivError(registerTipDiv, tip);
-  };
-  fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn).finally(function () {
-    submitButtons.forEach((a) => (a.disabled = false));
-  });
-}
-
-function logout() {
-  let logoutFetch = function () {
-    let url = loginSubmitContextPath + "auth/logout";
-    return fetch(url, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "manage-token": getTokenStr(),
-      }),
     });
-  };
-  let logoutConsumer = function (resultObj) {
-    resultObj = assistTool.regulateRestResult(resultObj);
-    if (!resultObj.success) {
-      assistTool.showErrorTip(resultObj.message);
-      console.error(resultObj.message);
-    }
-  };
-  fetchExecutor.execute(logoutFetch, logoutConsumer, assistTool.showErrorTip).finally(function () {
-    clearLoginStorge();
-    location.reload();
-  });
-}
-
-function clearLoginStorge() {
-  clearTokenStr();
-}
-
-function enableRequireCaptchaWindow(username) {
-  if (username == null || username.toString().trim() == "") {
-    console.error("开启验证码校验失败，用户名无效");
-    return false;
   }
-  requireCaptchaMap[username] = true;
-  if (requireCaptchaTimeoutIdMap[username] != null) clearTimeout(requireCaptchaTimeoutIdMap[username]);
-  // 2小时后取消验证码
-  setTimeout(
-    function () {
-      requireCaptchaMap[username] = false;
-    },
-    1000 * 60 * 60 * 2,
-  );
-  return true;
 }
 
-export function init(afterLogin, requireStartLogin, loginBarElement, fetchExecutorParam) {
-  fetchExecutor = fetchExecutorParam;
-
-  loginBoard = document.getElementById("loginBoard");
-  loginResultTip = loginBoard.querySelector(".loginResultTip");
-  if (typeof loginBarElement == "string") {
-    loginBarElement = document.getElementById(loginBarElement);
-  }
-  needLoginInfoBar = document.getElementById("needLoginInfoBar");
-  needLoginInfoBar.style.display = DISPLAY_REVERT;
-  loginBarElement.appendChild(needLoginInfoBar);
-  let loginAnchor = needLoginInfoBar.querySelector(".loginAnchor");
-  loginAnchor.onclick = function () {
-    openLoginPromise().then(afterLogin);
-  };
-  loginedInfoBar = document.getElementById("loginedInfoBar");
-  loginBarElement.appendChild(loginedInfoBar);
-  let logoutAnchor = loginedInfoBar.querySelector(".logoutAnchor");
-  logoutAnchor.onclick = logout;
-
-  if (requireStartLogin) checkLogin().then(afterLogin);
-
-  registerBoard = document.getElementById("registerBoard");
-  let registerAnchor = loginBoard.querySelector("#registerAnchor");
-  registerAnchor.onclick = function () {
-    openRegisterPromise().then(function (username) {
-      showTipDivError(loginResultTip, "注册成功");
-      let usernameInputOfLogin = loginBoard.querySelector("#username");
-      usernameInputOfLogin.value = username;
-      let passwordInputOfLogin = loginBoard.querySelector("#password");
-      passwordInputOfLogin.value = "";
+/**
+ * 格式化结果对象
+ * @param  {object} resultObj               结果对象
+ * @return {object}           结果
+ */
+export function regulateRestResult(resultObj) {
+  if (resultObj.success || resultObj.code == 0) {
+    return Object.assign(resultObj, {
+      success: true,
+      code: 0,
+      message: resultObj.message || resultObj.msg,
     });
-  };
+  } else {
+    if (resultObj.success == undefined && resultObj.code == undefined) {
+      return {
+        success: false,
+        code: resultObj.status,
+        message: resultObj.error + ", message: " + resultObj.message,
+        data: resultObj.timestamp,
+      };
+    } else {
+      return Object.assign(resultObj, {
+        success: false,
+        code: resultObj.code || 500,
+        message: resultObj.message || resultObj.msg,
+      });
+    }
+  }
+}
+
+/**
+ * 检查字符串中是否包含无效字符（如用于编码检测 ）
+ */
+export function containsInvalidChars(text) {
+  return /\uFFFD/.test(text);
 }

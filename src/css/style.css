@@ -1,544 +1,546 @@
 :root {
-  --main-link-color: #016cff;
-  --header-line-height: 48px;
-  --breadcrumb-line-height: 32px;
-  --font-family-text: "Inter", sans-serif;
-  --font-family-code: "JetBrains Mono", monospace;
+    --main-link-color: #016cff;
+    --header-line-height: 48px;
+    --breadcrumb-line-height: 32px;
+    --font-family-text: "Inter", sans-serif;
+    --font-family-code: "JetBrains Mono", monospace;
 }
 
 html {
-  height: 100%;
-  font-family: var(--font-family-text);
+    height: 100%;
+    font-family: var(--font-family-text);
 }
 
 body {
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    margin: 0;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 a:link,
 a:visited {
-  color: var(--main-link-color);
+    color: var(--main-link-color);
+}
+
+.dialogCloseButton:hover {
+    background-color: #dcdcdc;
 }
 
 .vertical-middle {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 #headerWrapper,
 #mainBodyWrapper,
 #breadcrumbLineWrapper {
-  border-bottom: 1px solid gray;
-  min-width: 1024px;
+    border-bottom: 1px solid gray;
+    min-width: 1024px;
 }
 
 #breadcrumbLineWrapper {
-  background-color: #f9f9fb;
+    background-color: #f9f9fb;
 }
 
 #footerWrapper {
-  min-width: 1024px;
+    min-width: 1024px;
 }
 
 header,
 #breadcrumbLine,
 main,
 footer {
-  width: 1024px;
-  margin: auto;
-  padding-left: 1em;
-  padding-right: 1em;
-  box-sizing: border-box;
-  background-color: white;
+    width: 1024px;
+    margin: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+    box-sizing: border-box;
+    background-color: white;
 }
 
 #breadcrumbLine {
-  background-color: #f9f9fb;
+    background-color: #f9f9fb;
 }
 
 #breadcrumbLine::after {
-  content: "";
-  display: block;
-  clear: both;
+    content: "";
+    display: block;
+    clear: both;
 }
 
 #breadcrumb {
-  float: left;
+    float: left;
 }
 
 #breadcrumb a {
-  color: black;
+    color: black;
 }
 
-#breadcrumb>span {
-  color: gray;
-  vertical-align: middle;
-  line-height: var(--breadcrumb-line-height);
+#breadcrumb > span {
+    color: gray;
+    vertical-align: middle;
+    line-height: var(--breadcrumb-line-height);
 }
 
 #breadcrumb a:hover {
-  color: var(--main-link-color);
+    color: var(--main-link-color);
 }
 
-#breadcrumb>a>span {
-  vertical-align: middle;
-  line-height: var(--breadcrumb-line-height);
+#breadcrumb > a > span {
+    vertical-align: middle;
+    line-height: var(--breadcrumb-line-height);
 }
 
-#breadcrumb>a:not(:last-child)::after {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 18px;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-  content: "chevron_right";
-  vertical-align: middle;
-  line-height: var(--breadcrumb-line-height);
-  color: gray;
+#breadcrumb > a:not(:last-child)::after {
+    font-family: "Material Icons";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    content: "chevron_right";
+    vertical-align: middle;
+    line-height: var(--breadcrumb-line-height);
+    color: gray;
 }
-
 
 #operateBar {
-  float: right;
+    float: right;
 }
 
-#operateBar>span {
-  vertical-align: middle;
-  line-height: var(--breadcrumb-line-height);
-  margin-left: 0.25em;
-  cursor: pointer;
+#operateBar > span {
+    vertical-align: middle;
+    line-height: var(--breadcrumb-line-height);
+    margin-left: 0.25em;
+    cursor: pointer;
 }
 
-#operateBar>span:hover {
-  color: var(--main-link-color);
+#operateBar > span:hover {
+    color: var(--main-link-color);
 }
 
 main {
-  padding-top: 1em;
-  padding-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 footer {
-  padding-top: 1em;
-  padding-bottom: 1em;
-  text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    text-align: center;
 }
 
 #topContent h1,
 #summaryContent h1,
 #middleContent h1,
 #bottomContent h1 {
-  text-align: center;
+    text-align: center;
 }
 
 #topContent p,
 #summaryContent p,
 #middleContent p,
 #bottomContent p {
-  text-indent: 2em;
-  line-height: 2;
+    text-indent: 2em;
+    line-height: 2;
 }
 
 #folderMenu,
 #articleMenu {
-  line-height: 2;
+    line-height: 2;
 }
 
 article h1 {
-  text-align: center;
+    text-align: center;
 }
 
 article p {
-  text-indent: 2em;
-  line-height: 2;
+    text-indent: 2em;
+    line-height: 2;
 }
 
 article img {
-  max-width: 800px;
-  max-height: 600px;
+    max-width: 800px;
+    max-height: 600px;
 }
 
-article p:has(>img) {
-  text-align: center;
+article p:has(> img) {
+    text-align: center;
 }
 
 article .specialColumn {
-  border: 2px solid #ccc;
-  padding: 1em;
+    border: 2px solid #ccc;
+    padding: 1em;
 }
 
 article .specialColumn::before {
-  content: '📖';
-  float: left;
-  font-size: 36px;
+    content: "📖";
+    float: left;
+    font-size: 36px;
 }
 
 header #logo,
 header #navigator {
-  display: inline-block;
-  vertical-align: middle;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 header a:link,
 header a:visited,
 footer a:link,
 footer a:visited {
-  color: black;
+    color: black;
 }
 
 header a:link:hover,
 header a:visited:hover,
 footer a:link:hover,
 footer a:visited:hover {
-  color: var(--main-link-color);
+    color: var(--main-link-color);
 }
 
 #navLine {
-  float: left;
+    float: left;
 }
 
 #profileLine {
-  float: right;
+    float: right;
 }
 
 #githubAnchor span {
-  vertical-align: middle;
-  line-height: var(--header-line-height);
+    vertical-align: middle;
+    line-height: var(--header-line-height);
 }
 
 #loginBar {
-  margin-left: 1em;
-
+    margin-left: 1em;
 }
 
-#loginBar>span>span,
-#loginBar>span>a {
-  vertical-align: middle;
-  line-height: var(--header-line-height);
+#loginBar > span > span,
+#loginBar > span > a {
+    vertical-align: middle;
+    line-height: var(--header-line-height);
 }
 
 header::after {
-  content: "";
-  clear: both;
-  display: block;
-  height: 0;
+    content: "";
+    clear: both;
+    display: block;
+    height: 0;
 }
 
 #logo {
-  color: green;
+    color: green;
 }
 
-#logo>span {
-  display: inline;
-  vertical-align: middle;
-  font-size: 1.5em;
-  font-weight: bold;
-  line-height: var(--header-line-height);
+#logo > span {
+    display: inline;
+    vertical-align: middle;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: var(--header-line-height);
 }
 
 #logo::before {
-  content: 'Ψ';
-  display: inline;
-  font-size: 2em;
-  font-family: 'Times New Roman', Times, serif;
-  vertical-align: middle;
+    content: "Ψ";
+    display: inline;
+    font-size: 2em;
+    font-family: "Times New Roman", Times, serif;
+    vertical-align: middle;
 }
 
 header #navigator {
-  margin-left: 2em;
+    margin-left: 2em;
 }
 
 .displayBlock {
-  display: block;
+    display: block;
 }
 
 .displayNone {
-  display: none;
+    display: none;
 }
 
 #navigator ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: medium;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: medium;
 }
 
 #navigator li {
-  display: inline-block;
+    display: inline-block;
 }
 
 #navigator li:not(:last-child) {
-  padding-right: 2em;
+    padding-right: 2em;
 }
 
 section {
-  padding-bottom: 1em;
+    padding-bottom: 1em;
 }
 
 section p {
-  line-height: 2em;
+    line-height: 2em;
 }
 
-footer>span,
-footer>a {
-  vertical-align: middle;
+footer > span,
+footer > a {
+    vertical-align: middle;
 }
 
-footer>a:not(:first-child) {
-  margin-left: 1em;
+footer > a:not(:first-child) {
+    margin-left: 1em;
 }
 
 article table {
-  border-collapse: collapse;
-  min-width: 75%;
+    border-collapse: collapse;
+    min-width: 75%;
 }
 
 article table td,
 article table th {
-  border: 1px solid gray;
-  padding: 0.5em;
+    border: 1px solid gray;
+    padding: 0.5em;
 }
 
 .learnMoreLink {
-  padding: 0.5em 1em 0.5em 2em;
-  line-height: 32px;
-  border: 1px solid var(--main-link-color);
-  border-radius: 50px;
-  background-color: #ffffffe0;
-  font-size: 16px;
-  display: inline-block;
+    padding: 0.5em 1em 0.5em 2em;
+    line-height: 32px;
+    border: 1px solid var(--main-link-color);
+    border-radius: 50px;
+    background-color: #ffffffe0;
+    font-size: 16px;
+    display: inline-block;
 }
 
 .learnMoreLink span {
-  vertical-align: middle;
-  display: inline-block;
+    vertical-align: middle;
+    display: inline-block;
 }
 
 .arrow-forward {
-  font-size: 16px;
-  margin-left: 1em;
-  border: 1px solid var(--main-link-color);
-  border-radius: 16px;
+    font-size: 16px;
+    margin-left: 1em;
+    border: 1px solid var(--main-link-color);
+    border-radius: 16px;
 }
 
 #contactInfo {
-  margin-top: 2em;
+    margin-top: 2em;
 }
 
 input[type="button"],
 input[type="submit"],
 input[type="reset"] {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #headerLeft {
-  float: left;
+    float: left;
 }
 
 #headerRight {
-  float: right;
+    float: right;
 }
 
 .bottomLine {
-  clear: both;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+    clear: both;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .tabPageBody {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .contentMain table {
-  width: 100%;
+    width: 100%;
 }
 
-.contentMain :has(>:required)::after {
-  content: '*';
-  color: red;
-  margin-left: 0.5em;
+.contentMain :has(> :required)::after {
+    content: "*";
+    color: red;
+    margin-left: 0.5em;
 }
 
 table.contentTable td {
-  padding: 8px;
+    padding: 8px;
 }
 
-table.contentTable tr:nth-child(2n+1) {
-  background-color: #eee;
+table.contentTable tr:nth-child(2n + 1) {
+    background-color: #eee;
 }
 
 table.contentTable tr td:first-child {
-  vertical-align: top;
-  width: 240px;
+    vertical-align: top;
+    width: 240px;
 }
 
-table.contentTable input[type='text'],
-table.contentTable input[type='number'],
+table.contentTable input[type="text"],
+table.contentTable input[type="number"],
 table.contentTable select {
-  height: 32px;
-  width: 400px;
-  box-sizing: border-box;
+    height: 32px;
+    width: 400px;
+    box-sizing: border-box;
 }
 
 table.contentTable textarea {
-  width: 400px;
-  box-sizing: border-box;
+    width: 400px;
+    box-sizing: border-box;
 }
 
 table.contentTable input:invalid,
 table.contentTable textarea:invalid,
 table.contentTable select:invalid {
-  border: 1px solid orange;
-  outline: 1px solid orange;
+    border: 1px solid orange;
+    outline: 1px solid orange;
 }
 
 .contentMain img {
-  border: 1px solid #aaa;
-  padding: 7px;
-  background-color: #eee;
-  vertical-align: bottom;
+    border: 1px solid #aaa;
+    padding: 7px;
+    background-color: #eee;
+    vertical-align: bottom;
 }
 
 img.iconImagePreview {
-  max-width: 120px;
-  max-height: 120px;
+    max-width: 120px;
+    max-height: 120px;
 }
 
 .detailImages a {
-  margin: 4px;
+    margin: 4px;
 }
 
 .detailImages .imgBox {
-  display: inline-block;
-  width: 160px;
-  height: 120px;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #ddd;
+    display: inline-block;
+    width: 160px;
+    height: 120px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ddd;
 }
 
-.detailImages .imgBox>img {
-  max-width: 100%;
-  max-height: 100%;
+.detailImages .imgBox > img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .plainButton {
-  background-color: rgb(0, 160, 234);
-  color: white;
-  border-radius: 3px;
-  border-width: 0;
-  font-size: 14px;
-  padding: 4px 8px;
+    background-color: rgb(0, 160, 234);
+    color: white;
+    border-radius: 3px;
+    border-width: 0;
+    font-size: 14px;
+    padding: 4px 8px;
 }
 
 .plainButtonBig {
-  background-color: #00a0ea;
-  color: #fff;
-  border-radius: 3px;
-  border-width: 0;
-  font-size: 16px;
-  padding: 5px 12px;
-  vertical-align: middle;
+    background-color: #00a0ea;
+    color: #fff;
+    border-radius: 3px;
+    border-width: 0;
+    font-size: 16px;
+    padding: 5px 12px;
+    vertical-align: middle;
 }
 
 .overflowEllipsis72 {
-  width: 72px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+    width: 72px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .panelContainer {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
 }
 
 .leftPanel {
-  width: 30%;
-  height: 100%;
-  float: left;
+    width: 30%;
+    height: 100%;
+    float: left;
 }
 
 .centerPanel {
-  width: 40%;
-  height: 100%;
-  float: left;
+    width: 40%;
+    height: 100%;
+    float: left;
 }
 
 .rightPanel {
-  width: 30%;
-  height: 100%;
-  float: left;
+    width: 30%;
+    height: 100%;
+    float: left;
 }
 
 .panel-33 {
-  width: 100%;
-  height: 33%;
+    width: 100%;
+    height: 33%;
 }
 
 .panel-34 {
-  width: 100%;
-  height: 33%;
+    width: 100%;
+    height: 33%;
 }
 
 .panel-80 {
-  height: 80%;
+    height: 80%;
 }
 
 .panel-20 {
-  height: 20%;
+    height: 20%;
 }
 
 .panel-50 {
-  height: 50%;
+    height: 50%;
 }
 
 .submitButtonLine {
-  margin: 1em 0;
+    margin: 1em 0;
 }
 
 .submitButtonLine input[type="submit"] {
-  background-color: #108ee9;
-  color: #fff;
-  width: 140px;
-  height: 36px;
-  border-radius: 4px;
-  border: none;
-  margin-right: 2em;
-  cursor: pointer;
+    background-color: #108ee9;
+    color: #fff;
+    width: 140px;
+    height: 36px;
+    border-radius: 4px;
+    border: none;
+    margin-right: 2em;
+    cursor: pointer;
 }
 
 .submitButtonLine input[type="button"],
 .submitButtonLine input[type="reset"] {
-  background-color: #f3f3f3;
-  color: #666666;
-  width: 140px;
-  height: 36px;
-  border-radius: 4px;
-  border: solid 1px #d9d9d9;
-  margin-right: 2em;
-  cursor: pointer;
+    background-color: #f3f3f3;
+    color: #666666;
+    width: 140px;
+    height: 36px;
+    border-radius: 4px;
+    border: solid 1px #d9d9d9;
+    margin-right: 2em;
+    cursor: pointer;
 }
 
 .detailGoBackButton {
-  background-color: #f3f3f3;
-  color: #666666;
-  width: 140px;
-  height: 36px;
-  border-radius: 4px;
-  border: solid 1px #d9d9d9;
-  margin-right: 2em;
-  cursor: pointer;
+    background-color: #f3f3f3;
+    color: #666666;
+    width: 140px;
+    height: 36px;
+    border-radius: 4px;
+    border: solid 1px #d9d9d9;
+    margin-right: 2em;
+    cursor: pointer;
 }
