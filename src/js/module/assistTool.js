@@ -277,6 +277,23 @@ export function showMessageDialog(messageHtml, forAMoment, noModal) {
       //dialog.close();
       dialog.parentNode.removeChild(dialog);
     }, 5000);
+  } else {
+    let closeButton = document.createElement("div");
+    closeButton.className = "dialogCloseButton";
+    closeButton.style.position = "absolute";
+    closeButton.style.right = "0.5em";
+    closeButton.style.top = "0.5em";
+    closeButton.style.lineHeight = "1";
+    closeButton.style.borderRadius = "50%";
+    closeButton.style.cursor = "pointer";
+    let span = document.createElement("span");
+    span.className = "material-icons";
+    span.textContent = "close";
+    closeButton.appendChild(span);
+    dialog.appendChild(closeButton);
+    closeButton.onclick = function () {
+      dialog.close();
+    };
   }
 
   return dialog;
