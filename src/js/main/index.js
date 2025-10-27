@@ -1,4 +1,4 @@
-import '@material/web/switch/switch.js';
+import "@material/web/switch/switch.js";
 import * as assistTool from "../module/assistTool.js";
 import * as loginModule from "../part/login.js";
 import * as fetchExecutor from "../module/fetchExecutor.js";
@@ -11,28 +11,26 @@ function uploadImage(formData, imgElement, inputHidden) {
   let url = poiManageApiUrl + "sys/file/upload-image";
   let invokeBefore = function () {
     return fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: new Headers({
-        'Authorization': getTokenStr(),
+        Authorization: getTokenStr(),
       }),
       body: formData,
     });
   };
   let invokeAfter = function (resultObj) {
     if (!resultObj.success) {
-      assistTool.showMessageTip(resultObj.message);
+      assistTool.showErrorTip(resultObj.message);
       return;
     }
     let picUrl = resultObj.data;
     imgElement.src = poiManageApiUrl + picUrl;
     inputHidden.value = picUrl;
   };
-  fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showMessageTip);
+  fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showErrorTip);
 }
 
-function initData() {
-
-}
+function initData() {}
 
 document.addEventListener("DOMContentLoaded", function () {
   fetchExecutor.init(loginModule.openLoginPromise);
@@ -44,4 +42,4 @@ document.addEventListener("DOMContentLoaded", function () {
   loginModule.init(afterLogin, false, "loginBar", fetchExecutor);
 });
 
-window.AssistTool = assistTool;
+window.assistTool = assistTool;

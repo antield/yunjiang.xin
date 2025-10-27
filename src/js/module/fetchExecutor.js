@@ -1,4 +1,5 @@
 
+
 let loginDialogFn = null;
 
 export function execute(fetchFn, resultConsumerFn, showMessageFn, data) {
@@ -22,14 +23,15 @@ export function execute(fetchFn, resultConsumerFn, showMessageFn, data) {
                         const contentTypeLower = contentType.toLowerCase();
                         if (contentTypeLower.startsWith('application/json')) {
                             return response.json().then(obj => resultConsumerFn(obj));
-                        } else if (contentTypeLower.startsWith('text/html')) {
+                        } else if (contentTypeLower.startsWith('text/') || contentTypeLower.startsWith('application/xml')) {
                             return response.text().then(text => resultConsumerFn(text));
-                        } else if (contentTypeLower.startsWith('application/')) {
+                        } else if (contentTypeLower.startsWith('application/octet-stream') || contentTypeLower.startsWith('application/zip')
+                            || contentTypeLower.startsWith('application/pdf')
+                            || contentTypeLower.startsWith('image/') || contentTypeLower.startsWith('audio/') || contentTypeLower.startsWith('video/')
+                            || contentTypeLower.startsWith('font/') || contentTypeLower.startsWith('model/')) {
                             return response.blob().then(blob => resultConsumerFn(blob));
-                        } else if (contentTypeLower.startsWith('image/') || contentTypeLower.startsWith('audio/') || contentTypeLower.startsWith('video/')) {
-                            return response.blob().then(blob => resultConsumerFn(blob));
-                        } else if (contentTypeLower.startsWith('font/') || contentTypeLower.startsWith('model/')) {
-                            return response.blob().then(blob => resultConsumerFn(blob));
+                        } else if (contentTypeLower.startsWith('multipart/form-data')) {
+                            return response.formData().then(formData => resultConsumerFn(formData));
                         }
                     }
                 }

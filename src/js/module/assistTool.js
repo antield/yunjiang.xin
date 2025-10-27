@@ -5,14 +5,14 @@
  * @type {Javascript}
  */
 
-import dialogPolyfill from 'dialog-polyfill';
+import dialogPolyfill from "dialog-polyfill";
 
 /**
  * Object.fromEntries folyfill
  */
 if (typeof Object.fromEntries != "function") {
   Object.fromEntries = function (iterable) {
-    var entries = ('entries' in iterable ? iterable.entries() : iterable);
+    var entries = "entries" in iterable ? iterable.entries() : iterable;
     var object = {};
     var entry;
     while ((entry = entries.next()) && !entry.done) {
@@ -21,7 +21,7 @@ if (typeof Object.fromEntries != "function") {
         configurable: true,
         enumerable: true,
         writable: true,
-        value: pair[1][1]
+        value: pair[1][1],
       });
     }
     return object;
@@ -44,7 +44,7 @@ export function groupBy(array, fn) {
   return Object.keys(groups).map(function (group) {
     return {
       key: group,
-      list: groups[group]
+      list: groups[group],
     };
   });
 }
@@ -61,8 +61,7 @@ export function encodeValueHtml(content, replaceBreakLine) {
   html = html.replace(/\'/gm, "&apos;"); //&#39;
   html = html.replace(/\</gm, "&lt;"); //&#60;
   html = html.replace(/\>/gm, "&gt;"); //&#62;
-  if (replaceBreakLine === true)
-    html = html.replace(/\r?\n/gm, "<br/>"); //&#62;
+  if (replaceBreakLine === true) html = html.replace(/\r?\n/gm, "<br/>"); //&#62;
   return html;
 }
 
@@ -70,7 +69,7 @@ function getTemplatePieceRegex() {
   let regex1 = "(\\{\\+?[_a-zA-Z]\\w{1,254}?(?:\\?\\?.+)?\\})";
   let regex2 = "(\\{[_a-zA-Z]\\w{1,254}?\\?[\\S]{1,254}?\\:[\\S]{0,254}?\\})";
   let regex3 = "(\\{[_a-zA-Z]\\w{1,254}?:display-\\w[\\w-]{0,64}?\\w\\})";
-  let regex4 = "(\\[[_a-zA-Z][\\w-:]{1,254}\\]=\"\\{\\?[_a-zA-Z]\\w{1,254}?}[^\"]*?\")";
+  let regex4 = '(\\[[_a-zA-Z][\\w-:]{1,254}\\]="\\{\\?[_a-zA-Z]\\w{1,254}?}[^"]*?")';
   let regex5 = "(<!--\\{\\+\\+[_a-zA-Z]\\w{1,254}?(?:\\?\\?.+)?\\}-->)";
   let regexStr = regex1 + "|" + regex2 + "|" + regex3 + "|" + regex4 + "|" + regex5;
   let regex = new RegExp(regexStr, "g");
@@ -114,16 +113,12 @@ export function replaceTemplateWithObject(template, obj) {
           html = "";
         } else {
           let defaultValueStr = matchedText.substring(defaultValuePartPos + 2, textPartEnd);
-          if (isHtmlContent)
-            html = defaultValueStr;
-          else
-            html = encodeValueHtml(defaultValueStr);
+          if (isHtmlContent) html = defaultValueStr;
+          else html = encodeValueHtml(defaultValueStr);
         }
       } else {
-        if (isHtmlContent)
-          html = pValue;
-        else
-          html = encodeValueHtml(pValue.toString());
+        if (isHtmlContent) html = pValue;
+        else html = encodeValueHtml(pValue.toString());
       }
       return html;
     }
@@ -144,7 +139,7 @@ export function replaceTemplateWithObject(template, obj) {
       let pValueFalse = pValue == false;
       let html;
       if (pValueFalse) {
-        html = "display:none;"
+        html = "display:none;";
       } else {
         let displayValuePos = matchedText.indexOf("-", fieldBoundaryPos) + 1;
         let displayValue = matchedText.substring(displayValuePos, matchedText.length - 1);
@@ -166,12 +161,12 @@ export function replaceTemplateWithObject(template, obj) {
         let rightBracketAttrPos = matchedText.indexOf("]");
         let attr = matchedText.substring(leftBracketAttrPos + 1, rightBracketAttrPos);
         let leftBracketValuePos = matchedText.indexOf("}");
-        let rightBracketValuePos = matchedText.lastIndexOf("\"");
+        let rightBracketValuePos = matchedText.lastIndexOf('"');
         let value = matchedText.substring(leftBracketValuePos + 1, rightBracketValuePos);
         if (value == "") {
           return attr;
         } else {
-          return attr + "=\"" + value + "\"";
+          return attr + '="' + value + '"';
         }
       }
     }
@@ -186,10 +181,8 @@ export function replaceTemplateWithObject(template, obj) {
       let pValueNotExist = pValue == undefined || pValue == "";
       let html;
       if (pValueNotExist) {
-        if (defaultValuePartPos < 0)
-          html = "";
-        else
-          html = matchedText.substring(defaultValuePartPos + 2, textPartEnd);
+        if (defaultValuePartPos < 0) html = "";
+        else html = matchedText.substring(defaultValuePartPos + 2, textPartEnd);
       } else {
         html = pValue;
       }
@@ -204,8 +197,30 @@ export function replaceTemplateWithObject(template, obj) {
  * @return {HTMLDialogElement}             对话框对象
  */
 export function showMessageTip(messageHtml) {
-  messageHtml = "<span class=\"material-icons\" style=\"color:blue;margin-right:1em;vertical-align:middle;\">info</span>" + messageHtml;
+  messageHtml =
+    '<span class="material-icons" style="color:dodgerblue;margin-right:0.75em;vertical-align:middle;">info</span>' +
+    '<span style="color:dodgerblue">' +
+    messageHtml +
+    "</span>";
   let dialog = showMessageDialog(messageHtml, true, true);
+  dialog.style.marginTop = "80px";
+  dialog.blur();
+  return dialog;
+}
+
+/**
+ * 显示页面错误消息提示
+ * @param  {string|HTMLElement} messageHtml 需要显示的错误消息的HTML或节点对象
+ * @return {HTMLDialogElement}             对话框对象
+ */
+export function showErrorTip(messageHtml) {
+  messageHtml =
+    '<span class="material-icons" style="color:firebrick;margin-right:0.75em;vertical-align:middle;">error</span>' +
+    '<span style="color:firebrick">' +
+    messageHtml +
+    "</span>";
+  let dialog = showMessageDialog(messageHtml, true, true);
+  dialog.style.marginTop = "80px";
   dialog.blur();
   return dialog;
 }
@@ -230,10 +245,10 @@ export function showMessageDialog(messageHtml, forAMoment, noModal) {
     dialog.appendChild(messageHtml);
   }
   document.body.appendChild(dialog);
-  dialog.style.boxShadow = '0px 0px 2px 2px #d5d5d5';
-  dialog.style.borderRadius = '10px';
-  dialog.style.borderWidth = '1px';
-  dialog.style.borderColor = '#acacac';
+  dialog.style.boxShadow = "0px 0px 2px 2px #d5d5d5";
+  dialog.style.borderRadius = "10px";
+  dialog.style.borderWidth = "1px";
+  dialog.style.borderColor = "#acacac";
   if (noModal) {
     if (needPloyFill) {
       dialog.style.position = "fixed";
@@ -265,7 +280,7 @@ export function showMessageDialog(messageHtml, forAMoment, noModal) {
   }
 
   return dialog;
-};
+}
 
 /**
  * 显示页面消息确认框
@@ -324,11 +339,9 @@ export function formatDateTimeToTypicalString(date, withOutTime, withJunctor, wi
   let day = date.getDate().toString();
   let year = date.getFullYear().toString();
 
-  if (month.length < 2)
-    month = '0' + month;
-  if (day.length < 2)
-    day = '0' + day;
-  let dateStr = [year, month, day].join('-');
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+  let dateStr = [year, month, day].join("-");
 
   if (withOutTime == true) {
     return dateStr;
@@ -336,22 +349,19 @@ export function formatDateTimeToTypicalString(date, withOutTime, withJunctor, wi
 
   let hour = date.getHours().toString();
   let minute = date.getMinutes().toString();
-  if (hour.length < 2)
-    hour = '0' + hour;
-  if (minute.length < 2)
-    minute = '0' + minute;
+  if (hour.length < 2) hour = "0" + hour;
+  if (minute.length < 2) minute = "0" + minute;
   let timeStr = hour + ":" + minute;
   if (withSeconds == true) {
     let seconds = date.getSeconds().toString();
-    if (seconds.length < 2)
-      seconds = "0" + seconds;
+    if (seconds.length < 2) seconds = "0" + seconds;
     timeStr += ":" + seconds;
   }
 
   let junctor = withJunctor ? "T" : " ";
   let datetimeStr = dateStr + junctor + timeStr;
   return datetimeStr;
-};
+}
 
 /**
  * 为日期字符串添加时区信息
@@ -361,13 +371,10 @@ export function formatDateTimeToTypicalString(date, withOutTime, withJunctor, wi
  * @return {string}                        需追加的时区信息字符串
  */
 export function getTimezoneAppendStr(timezoneOffset, alreadyHasSeconds, alreadyHasMilliseconds) {
-  if (timezoneOffset == undefined)
-    timezoneOffset = new Date().getTimezoneOffset();
+  if (timezoneOffset == undefined) timezoneOffset = new Date().getTimezoneOffset();
   let offsetAppendStr = ":00.000";
-  if (alreadyHasSeconds === true)
-    offsetAppendStr = ".000";
-  if (alreadyHasMilliseconds === true)
-    offsetAppendStr = "";
+  if (alreadyHasSeconds === true) offsetAppendStr = ".000";
+  if (alreadyHasMilliseconds === true) offsetAppendStr = "";
 
   if (timezoneOffset == 0) {
     return offsetAppendStr + "Z";
@@ -380,7 +387,7 @@ export function getTimezoneAppendStr(timezoneOffset, alreadyHasSeconds, alreadyH
     let minutesStr = remainMinutes < 10 ? "0" + remainMinutes.toString() : remainMinutes.toString();
     return offsetAppendStr + (positive ? "+" : "-") + hoursStr + ":" + minutesStr;
   }
-};
+}
 
 /**
  * 格式化日期为带时区信息的标准格式字符串，如："2019-12-21T11:09.000+08:00"
@@ -412,8 +419,7 @@ export function checkRespOkToJson(response) {
   if (isJson) {
     return response.json();
   } else {
-    if (!response.ok)
-      console.error("not response ok, status:" + response.status + ", statusText:" + response.statusText);
+    if (!response.ok) console.error("not response ok, status:" + response.status + ", statusText:" + response.statusText);
     return response.text().then(function (text) {
       try {
         let obj = JSON.parse(text);
@@ -423,7 +429,7 @@ export function checkRespOkToJson(response) {
       }
     });
   }
-};
+}
 
 /**
  * 格式化结果对象
@@ -443,7 +449,7 @@ export function regulateRestResult(resultObj) {
         success: false,
         code: resultObj.status,
         message: resultObj.error + ", message: " + resultObj.message,
-        data: resultObj.timestamp
+        data: resultObj.timestamp,
       };
     } else {
       return Object.assign(resultObj, {

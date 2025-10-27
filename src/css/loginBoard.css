@@ -1,104 +1,105 @@
 .loginBoard {
-  line-height: 2;
-  padding: 2em 3em;
-  background-color: white;
+    line-height: 2;
+    padding: 2em 3em;
+    background-color: white;
 }
 
 .loginFormTitle {
-  margin: 0 0 1em 0;
-  text-align: center;
-  color: #666;
+    margin: 0 0 1em 0;
+    text-align: center;
+    color: #666;
 }
 
 .loginResultTip {
-  color: #a00;
-  font-size: 14px;
+    color: #a00;
+    font-size: 14px;
 }
 
 .loginResultTip .material-icons {
-  color: #a00;
-  font-size: 16px;
-  margin-right: 0.25em;
-  vertical-align: middle;
+    color: #a00;
+    font-size: 16px;
+    margin-right: 0.25em;
+    vertical-align: middle;
 }
 
 .loginResultTip .errorMsg {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 .inputRow {
-  padding: 0.75em 0;
+    padding: 0.75em 0;
 }
 
 .inputElement {
-  width: 260px;
-  height: 36px;
-  padding: 0 1em;
-  box-sizing: border-box;
+    width: 260px;
+    height: 36px;
+    padding: 0 1em;
+    box-sizing: border-box;
 }
 
 #registerForm .inputElement {
-  width: 300px;
+    width: 300px;
 }
 
 .indentBox {
-  position: relative;
+    position: relative;
 }
 
 .indentLabel {
-  position: absolute;
-  top: 50%;
-  padding-left: 0.75em;
-  transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    padding-left: 0.75em;
+    transform: translateY(-50%);
+    font-size: smaller;
 }
 
-.indentLabel+input[type="text"],
-.indentLabel+input[type="password"] {
-  padding-left: 6em;
+.indentLabel + input[type="text"],
+.indentLabel + input[type="password"] {
+    padding-left: 6em;
 }
 
-#registerForm .indentLabel+input[type="text"],
-#registerForm .indentLabel+input[type="password"] {
-  padding-left: 7em;
+#registerForm .indentLabel + input[type="text"],
+#registerForm .indentLabel + input[type="password"] {
+    padding-left: 7em;
 }
 
 .loginSubmitRow {
-  padding: 0.75em 0;
+    padding: 0.75em 0;
 }
 
 .submitButton {
-  background-color: #00a0ea;
-  color: white;
-  border-radius: 5px;
-  border-width: 0;
-  font-size: 14px;
-  padding: 6px 32px;
-  vertical-align: middle;
-  box-sizing: border-box;
-  width: 260px;
-  height: 36px;
+    background-color: #00a0ea;
+    color: white;
+    border-radius: 5px;
+    border-width: 0;
+    font-size: 14px;
+    padding: 6px 32px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    width: 260px;
+    height: 36px;
 }
 
 .secondaryButton {
-  background-color: white;
-  color: #00a0ea;
-  border: 1px solid #00a0ea;
-  border-radius: 5px;
-  box-sizing: border-box;
-  width: 260px;
-  height: 36px;
+    background-color: white;
+    color: #00a0ea;
+    border: 1px solid #00a0ea;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 260px;
+    height: 36px;
 }
 
 #registerForm .submitButton,
 #registerForm .secondaryButton {
-  width: 300px;
+    width: 300px;
 }
 
 #croppedImageInput::-webkit-slider-thumb {
-  cursor: pointer;
+    cursor: pointer;
 }
 
-#registerBoard .inputRow:has(>:required)::after {
-  content: '*';
-  color: red;
+#registerBoard .inputRow:has(> :required)::after {
+    content: "*";
+    color: red;
 }

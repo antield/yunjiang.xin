@@ -19,6 +19,8 @@ const requireCaptchaMap = {};
 const requireCaptchaTimeoutIdMap = {};
 let captchaDialog = null;
 
+let userInfo = null;
+
 function keySuffix() {
   return loginSubmitContextPath.replaceAll(/[:/.]+/g, "_");
 }
@@ -36,45 +38,28 @@ function clearTokenStr() {
   let tokenKey = "token_" + keySuffix();
   localStorage.removeItem(tokenKey);
 }
-function getUserInfo() {
-  let userInfoKey = "userInfo_" + keySuffix();
-  let userInfoStr = localStorage.getItem(userInfoKey);
-  return userInfoStr == null ? null : JSON.parse(userInfoStr);
-}
-function saveUserInfo(userInfo) {
-  let userInfoStr = JSON.stringify(userInfo);
-  let userInfoKey = "userInfo_" + keySuffix();
-  localStorage.setItem(userInfoKey, userInfoStr);
-}
-function clearUserInfo() {
-  let userInfoKey = "userInfo_" + keySuffix();
-  localStorage.removeItem(userInfoKey);
-}
 
 export function checkLogin(tip) {
   let tokenStr = getTokenStr();
   if (tokenStr == null || tokenStr == "") {
     return openLoginPromise(tip);
   } else {
-    let userInfo = getUserInfo();
-    showLoginedInfoBar(userInfo);
+    showLoginedInfoBar();
     return Promise.resolve(true);
   }
 }
 
 function openRegisterPromise(tip) {
   registerBoard.style.display = DISPLAY_REVERT;
-  if (registerBoardDialog == null)
-    registerBoardDialog = assistTool.showMessageDialog(registerBoard);
-  if (!registerBoardDialog.open)
-    registerBoardDialog.showModal();
+  if (registerBoardDialog == null) registerBoardDialog = assistTool.showMessageDialog(registerBoard);
+  if (!registerBoardDialog.open) registerBoardDialog.showModal();
   return new Promise(function (resolve, reject) {
     let form = registerBoard.querySelector("form");
     let usernameInput = form.querySelector("#registerUsername");
     let registerTipDiv = registerBoard.querySelector("#registerTip");
     if (usernameInput.oninput == null) {
       usernameInput.oninput = function () {
-        clearTipDivMsg(registerTipDiv);
+        clearTipDivError(registerTipDiv);
       };
     }
     form.onsubmit = function () {
@@ -92,19 +77,17 @@ function openRegisterPromise(tip) {
 export function openLoginPromise(tip) {
   clearLoginStorge();
   loginBoard.style.display = DISPLAY_REVERT;
-  if (loginBoardDialog == null)
-    loginBoardDialog = assistTool.showMessageDialog(loginBoard);
-  if (!loginBoardDialog.open)
-    loginBoardDialog.showModal();
+  if (loginBoardDialog == null) loginBoardDialog = assistTool.showMessageDialog(loginBoard);
+  if (!loginBoardDialog.open) loginBoardDialog.showModal();
   if (tip != null) {
-    showTipDivMsg(loginResultTip, tip);
+    showTipDivError(loginResultTip, tip);
   }
   return new Promise(function (resolve, reject) {
     let form = loginBoard.querySelector("form");
     let usernameInput = form.querySelector("#username");
     if (usernameInput.oninput == null) {
       usernameInput.oninput = function () {
-        clearTipDivMsg(loginResultTip);
+        clearTipDivError(loginResultTip);
       };
     }
     form.onsubmit = function () {
@@ -113,12 +96,12 @@ export function openLoginPromise(tip) {
   });
 }
 
-function showTipDivMsg(tipDiv, msg) {
+function showTipDivError(tipDiv, msg) {
   tipDiv.style.display = DISPLAY_REVERT;
   tipDiv.querySelector(".errorMsg").textContent = msg;
 }
 
-function clearTipDivMsg(tipDiv) {
+function clearTipDivError(tipDiv) {
   tipDiv.style.display = DISPLAY_NONE;
   tipDiv.querySelector(".errorMsg").textContent = "";
 }
@@ -134,22 +117,22 @@ function openCaptchaPromise(contentObj, tip) {
   }
   let captchaTipDiv = captchaBoard.querySelector("#captchaTip");
   if (tip != null) {
-    showTipDivMsg(captchaTipDiv, tip);
+    showTipDivError(captchaTipDiv, tip);
   }
   let captchaPromise = new Promise(function (resolve, reject) {
     let captchaPromise = function () {
       let url = loginSubmitContextPath + "auth/captcha-image";
       return fetch(url, {
         headers: new Headers({
-          'Content-Type': 'application/json',
-        })
-      })
+          "Content-Type": "application/json",
+        }),
+      });
     };
 
     let captchaConsumer = function (resultObj) {
       resultObj = assistTool.regulateRestResult(resultObj);
       if (!resultObj.success) {
-        showTipDivMsg(captchaTipDiv, resultObj.message);
+        showTipDivError(captchaTipDiv, resultObj.message);
         return;
       }
 
@@ -175,13 +158,13 @@ function openCaptchaPromise(contentObj, tip) {
         captchaDialog.close();
         croppedImage.style.top = "0";
         croppedImage.style.left = "0";
-        clearTipDivMsg(captchaTipDiv);
+        clearTipDivError(captchaTipDiv);
         resolve(contentObj);
-      }
-    }
+      };
+    };
     let showMessageFn = function (tip) {
-      showTipDivMsg(captchaTipDiv, tip);
-    }
+      showTipDivError(captchaTipDiv, tip);
+    };
     fetchExecutor.execute(captchaPromise, captchaConsumer, showMessageFn);
   });
   return captchaPromise;
@@ -190,11 +173,11 @@ function openCaptchaPromise(contentObj, tip) {
 function loginSubmitFetch(contentObj) {
   let url = loginSubmitContextPath + "auth/login";
   return fetch(url, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(contentObj),
     headers: new Headers({
-      'Content-Type': 'application/json',
-    })
+      "Content-Type": "application/json",
+    }),
   });
 }
 
@@ -202,12 +185,12 @@ function loginSubmit(form, resolve) {
   let formData = new FormData(form);
   let username = formData.get("username").trim();
   if (username == "") {
-    showTipDivMsg(loginResultTip, "请输入用户名");
+    showTipDivError(loginResultTip, "请输入用户名");
     return;
   }
   let password = formData.get("password");
   if (password == "") {
-    showTipDivMsg(loginResultTip, "请输入密码");
+    showTipDivError(loginResultTip, "请输入密码");
     return;
   }
   let contentObj = {
@@ -215,7 +198,7 @@ function loginSubmit(form, resolve) {
     password,
   };
   let showTipDivMsgFn = function (tip) {
-    showTipDivMsg(loginResultTip, tip);
+    showTipDivError(loginResultTip, tip);
   };
   let invokeBeforeFn = function (tip) {
     let invokeBefore;
@@ -240,7 +223,7 @@ function loginSubmit(form, resolve) {
         return fetchExecutor.execute(invokeBeforeTipFn, invokeAfter, showTipDivMsgFn, username);
       }
 
-      showTipDivMsg(loginResultTip, resultObj.message);
+      showTipDivError(loginResultTip, resultObj.message);
       return;
     }
 
@@ -254,7 +237,7 @@ function loginSubmit(form, resolve) {
   fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn, username);
 }
 
-function showLoginedInfoBar(userInfo) {
+function showLoginedInfoBar() {
   if (userInfo != null) {
     let nicknameSpan = loginedInfoBar.querySelector(".nickname");
     nicknameSpan.textContent = userInfo.nickname;
@@ -264,38 +247,37 @@ function showLoginedInfoBar(userInfo) {
     let invokeBefore = function () {
       let url = loginSubmitContextPath + "auth/self-info";
       return fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: new Headers({
-          'Content-Type': 'application/json',
-          'manage-token': getTokenStr(),
-        })
+          "Content-Type": "application/json",
+          "manage-token": getTokenStr(),
+        }),
       });
     };
     let invokeAfter = function (resultObj) {
       resultObj = assistTool.regulateRestResult(resultObj);
       if (!resultObj.success) {
-        assistTool.showMessageTip(resultObj.message);
+        assistTool.showErrorTip(resultObj.message);
         return;
       }
       userInfo = resultObj.data;
-      saveUserInfo(userInfo);
       let nicknameSpan = loginedInfoBar.querySelector(".nickname");
       nicknameSpan.textContent = userInfo.nickname;
       loginedInfoBar.style.display = DISPLAY_REVERT;
       needLoginInfoBar.style.display = DISPLAY_NONE;
     };
-    fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showMessageTip);
+    fetchExecutor.execute(invokeBefore, invokeAfter, assistTool.showErrorTip);
   }
 }
 
 function registerSubmitFetch(contentObj) {
   let url = loginSubmitContextPath + "auth/register";
   return fetch(url, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(contentObj),
     headers: new Headers({
-      'Content-Type': 'application/json',
-    })
+      "Content-Type": "application/json",
+    }),
   });
 }
 
@@ -304,17 +286,17 @@ function registerSubmit(form, resolve) {
   let registerTipDiv = form.querySelector("#registerTip");
   let username = formData.get("username").trim();
   if (username == "") {
-    showTipDivMsg(registerTipDiv, "请输入用户名");
+    showTipDivError(registerTipDiv, "请输入用户名");
     return;
   }
   let password = formData.get("password");
   if (password == "") {
-    showTipDivMsg(registerTipDiv, "请输入密码");
+    showTipDivError(registerTipDiv, "请输入密码");
     return;
   }
   let passwordConfirm = formData.get("passwordConfirm");
   if (password != passwordConfirm) {
-    showTipDivMsg(registerTipDiv, "两次密码不一致");
+    showTipDivError(registerTipDiv, "两次密码不一致");
     return;
   }
   let nickname = formData.get("nickname").trim();
@@ -329,13 +311,13 @@ function registerSubmit(form, resolve) {
   };
   let submitButtons = form.querySelectorAll("[type='submit']");
   let invokeBeforeFn = function (tip) {
-    submitButtons.forEach(a => a.disabled = true);
+    submitButtons.forEach((a) => (a.disabled = true));
     return openCaptchaPromise(contentObj, tip).then(registerSubmitFetch);
   };
   let invokeAfter = function (resultObj) {
     resultObj = assistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
-      showTipDivMsg(registerTipDiv, resultObj.message);
+      showTipDivError(registerTipDiv, resultObj.message);
       return;
     }
 
@@ -343,10 +325,10 @@ function registerSubmit(form, resolve) {
     resolve(username);
   };
   let showTipDivMsgFn = function (tip) {
-    showTipDivMsg(registerTipDiv, tip);
+    showTipDivError(registerTipDiv, tip);
   };
   fetchExecutor.execute(invokeBeforeFn, invokeAfter, showTipDivMsgFn).finally(function () {
-    submitButtons.forEach(a => a.disabled = false);
+    submitButtons.forEach((a) => (a.disabled = false));
   });
 }
 
@@ -354,21 +336,21 @@ function logout() {
   let logoutFetch = function () {
     let url = loginSubmitContextPath + "auth/logout";
     return fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: new Headers({
-        'Content-Type': 'application/json',
-        'manage-token': getTokenStr(),
-      })
+        "Content-Type": "application/json",
+        "manage-token": getTokenStr(),
+      }),
     });
   };
   let logoutConsumer = function (resultObj) {
     resultObj = assistTool.regulateRestResult(resultObj);
     if (!resultObj.success) {
-      assistTool.showMessageTip(resultObj.message);
+      assistTool.showErrorTip(resultObj.message);
       console.error(resultObj.message);
     }
-  }
-  fetchExecutor.execute(logoutFetch, logoutConsumer, assistTool.showMessageTip).finally(function () {
+  };
+  fetchExecutor.execute(logoutFetch, logoutConsumer, assistTool.showErrorTip).finally(function () {
     clearLoginStorge();
     location.reload();
   });
@@ -376,7 +358,6 @@ function logout() {
 
 function clearLoginStorge() {
   clearTokenStr();
-  clearUserInfo();
 }
 
 function enableRequireCaptchaWindow(username) {
@@ -385,12 +366,14 @@ function enableRequireCaptchaWindow(username) {
     return false;
   }
   requireCaptchaMap[username] = true;
-  if (requireCaptchaTimeoutIdMap[username] != null)
-    clearTimeout(requireCaptchaTimeoutIdMap[username]);
+  if (requireCaptchaTimeoutIdMap[username] != null) clearTimeout(requireCaptchaTimeoutIdMap[username]);
   // 2小时后取消验证码
-  setTimeout(function () {
-    requireCaptchaMap[username] = false;
-  }, 1000 * 60 * 60 * 2);
+  setTimeout(
+    function () {
+      requireCaptchaMap[username] = false;
+    },
+    1000 * 60 * 60 * 2,
+  );
   return true;
 }
 
@@ -414,14 +397,13 @@ export function init(afterLogin, requireStartLogin, loginBarElement, fetchExecut
   let logoutAnchor = loginedInfoBar.querySelector(".logoutAnchor");
   logoutAnchor.onclick = logout;
 
-  if (requireStartLogin)
-    checkLogin().then(afterLogin);
+  if (requireStartLogin) checkLogin().then(afterLogin);
 
   registerBoard = document.getElementById("registerBoard");
   let registerAnchor = loginBoard.querySelector("#registerAnchor");
   registerAnchor.onclick = function () {
     openRegisterPromise().then(function (username) {
-      showTipDivMsg(loginResultTip, "注册成功");
+      showTipDivError(loginResultTip, "注册成功");
       let usernameInputOfLogin = loginBoard.querySelector("#username");
       usernameInputOfLogin.value = username;
       let passwordInputOfLogin = loginBoard.querySelector("#password");
