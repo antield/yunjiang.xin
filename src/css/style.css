@@ -41,7 +41,7 @@ a:visited {
 #mainBodyWrapper,
 #breadcrumbLineWrapper {
     border-bottom: 1px solid gray;
-    min-width: 1024px;
+    width: 100%;
 }
 
 #breadcrumbLineWrapper {
@@ -49,19 +49,64 @@ a:visited {
 }
 
 #footerWrapper {
-    min-width: 1024px;
+    width: 100%;
 }
 
 header,
 #breadcrumbLine,
 main,
 footer {
-    width: 1024px;
     margin: auto;
     padding-left: 1em;
     padding-right: 1em;
     box-sizing: border-box;
     background-color: white;
+}
+
+@media only screen and (max-width: 600px) {
+    header,
+    #breadcrumbLine,
+    main,
+    footer {
+        max-width: 600px;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    header,
+    #breadcrumbLine,
+    main,
+    footer {
+        max-width: 600px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    header,
+    #breadcrumbLine,
+    main,
+    footer {
+        max-width: 768px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    header,
+    #breadcrumbLine,
+    main,
+    footer {
+        max-width: 992px;
+    }
+}
+
+/* 超大设备 (大屏幕台式机, 1200px 及以上) */
+@media only screen and (min-width: 1280px) {
+    header,
+    #breadcrumbLine,
+    main,
+    footer {
+        max-width: 1280px;
+    }
 }
 
 #breadcrumbLine {
@@ -261,8 +306,8 @@ header::after {
     vertical-align: middle;
 }
 
-header #navigator {
-    margin-left: 2em;
+header #logo {
+    margin-right: 2em;
 }
 
 .displayBlock {
