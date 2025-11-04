@@ -77,7 +77,7 @@ footer {
     #breadcrumbLine,
     main,
     footer {
-        max-width: 600px;
+        max-width: 768px;
     }
 }
 
@@ -86,16 +86,16 @@ footer {
     #breadcrumbLine,
     main,
     footer {
-        max-width: 768px;
+        max-width: 960px;
     }
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 960px) {
     header,
     #breadcrumbLine,
     main,
     footer {
-        max-width: 992px;
+        max-width: 1280px;
     }
 }
 
@@ -217,12 +217,13 @@ article p {
 }
 
 article img {
-    max-width: 800px;
-    max-height: 600px;
+    max-width: min(800px, calc(100% - 2em));
+    max-height: min(600px, calc(100% - 4em));
 }
 
 article p:has(> img) {
     text-align: center;
+    text-indent: revert;
 }
 
 article .specialColumn {
@@ -352,7 +353,8 @@ footer > a:not(:first-child) {
 
 article table {
     border-collapse: collapse;
-    min-width: 75%;
+    min-width: 80%;
+    margin: auto;
 }
 
 article table td,
