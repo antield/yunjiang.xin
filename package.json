@@ -25,6 +25,7 @@
     "gulp-clean-css": "^4.2.0",
     "gulp-file-include": "^2.0.1",
     "gulp-markdown": "^8.0.0",
+    "gulp-rsync": "^0.1.0",
     "gulp-webserver": "^0.9.1",
     "html-loader": "^0.5.5",
     "jquery": "^2.2.1",

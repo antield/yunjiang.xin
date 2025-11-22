@@ -15,6 +15,7 @@ import Webpack_Config_Prod from "./webpack.prod.js";
 import Webpack_Config_Dev from "./webpack.dev.js";
 import ghpages from "gh-pages";
 import { argv } from "node:process";
+import rsync from "gulp-rsync";
 
 const pkg = {
   name: "yunjiang.xin",
@@ -491,15 +492,23 @@ export const sync_deploy = async () => {
   if (profileCustom != null) profile = profileCustom;
   const filePath = "./ssh-config-" + profile + ".js";
   console.log(filePath);
-  let sshConfig;
-  try {
-    sshConfig = await import(filePath);
-    console.log(sshConfig);
-  } catch (error) {
-    console.error("导入SSH配置文件失败，profileCustom：" + profileCustom);
-    throw error;
-  }
-
+  const { default: sshConfig } = await import(filePath);
+  console.log(JSON.stringify(sshConfig));
+  const account = sshConfig.account;
+  console.log(account.host);
+  src(Dist_Prod + "/**").pipe(
+    rsync({
+      root: Dist_Prod + "/",
+      hostname: account.host,
+      username: account.username,
+      password: account.password,
+      destination: "/data/www/",
+      archive: true,
+      silent: false,
+      compress: true,
+      command: true,
+    }),
+  );
 };
 
 function pickupArgVaule(key) {
