@@ -37,7 +37,10 @@ function watch_task(cb) {
   watch("src/css/*", copy_css);
   watch("src/css/lib/**", copy_css_lib);
   //watch('src/images/**', copy_images);
-  watch(["src/js/main/**/*.js", "src/js/module/*", "src/js/part/*"], compile_js);
+  watch(
+    ["src/js/main/**/*.js", "src/js/module/*", "src/js/part/*"],
+    compile_js,
+  );
   cb();
 }
 
@@ -66,7 +69,10 @@ function injectOpusFileContent(templateContent) {
       title = nameStem;
     }
     outputContent = outputContent.replaceAll("<!-- @@title -->", title);
-    outputContent = outputContent.replace("<!-- @@content -->", file.contents.toString());
+    outputContent = outputContent.replace(
+      "<!-- @@content -->",
+      file.contents.toString(),
+    );
     file.contents = Buffer.from(outputContent);
     file.extname = ".html";
     cb(null, file);
@@ -76,7 +82,8 @@ function injectOpusFileContent(templateContent) {
 async function injectArticleBreadcrumb(outputContent, file) {
   const dirname = file.dirname;
   const opusRoot = path.join(file.cwd, "src/opus");
-  if (!dirname.startsWith(opusRoot) || dirname == opusRoot) return outputContent;
+  if (!dirname.startsWith(opusRoot) || dirname == opusRoot)
+    return outputContent;
 
   const breadcrumbHtmlArr = [];
   let currentDir = dirname;
@@ -103,7 +110,10 @@ async function injectArticleBreadcrumb(outputContent, file) {
   } while (currentDir != opusRoot);
   breadcrumbHtmlArr.reverse();
   const breadcrumbHtml = breadcrumbHtmlArr.join("");
-  outputContent = outputContent.replace("<!-- @@breadcrumb -->", breadcrumbHtml);
+  outputContent = outputContent.replace(
+    "<!-- @@breadcrumb -->",
+    breadcrumbHtml,
+  );
 
   return outputContent;
 }
@@ -111,7 +121,8 @@ async function injectArticleBreadcrumb(outputContent, file) {
 async function injectFolderBreadcrumb(outputContent, file) {
   const dirname = file.dirname;
   const opusRoot = path.join(file.cwd, "src/opus");
-  if (!dirname.startsWith(opusRoot) || dirname == opusRoot) return outputContent;
+  if (!dirname.startsWith(opusRoot) || dirname == opusRoot)
+    return outputContent;
 
   const breadcrumbHtmlArr = [];
   let currentDir = dirname;
@@ -143,14 +154,20 @@ async function injectFolderBreadcrumb(outputContent, file) {
   } while (currentDir != opusRoot);
   breadcrumbHtmlArr.reverse();
   const breadcrumbHtml = breadcrumbHtmlArr.join("");
-  outputContent = outputContent.replace("<!-- @@breadcrumb -->", breadcrumbHtml);
+  outputContent = outputContent.replace(
+    "<!-- @@breadcrumb -->",
+    breadcrumbHtml,
+  );
 
   return outputContent;
 }
 
 export async function copy_opus_article() {
   const opus_article_template = "src/template/opus-article.htm";
-  const opusArticleTemplateContent = await fs.readFile(opus_article_template, "utf8");
+  const opusArticleTemplateContent = await fs.readFile(
+    opus_article_template,
+    "utf8",
+  );
   return src("src/opus/**/*.md")
     .pipe(markdown())
     .pipe(injectOpusFileContent(opusArticleTemplateContent))
@@ -180,7 +197,9 @@ function injectOpusFolderContent(templateContent) {
       console.log("parse folderInfo error: " + e);
       folderInfo = {};
     }
-    const title = folderInfo.name || file.dirname.substring(file.dirname.lastIndexOf(path.sep) + 1);
+    const title =
+      folderInfo.name ||
+      file.dirname.substring(file.dirname.lastIndexOf(path.sep) + 1);
     outputContent = outputContent.replace("<!-- @@title -->", title);
 
     const topEmdFile = path.join(file.dirname, "top.emd");
@@ -201,14 +220,18 @@ function injectOpusFolderContent(templateContent) {
       await fs.access(summaryEmdFile);
       const mdContent = await fs.readFile(summaryEmdFile, "utf8");
       summaryContent = marked.parse(mdContent);
-      summaryContent = '<section id="summaryContent">\n' + summaryContent + "</section>\n";
+      summaryContent =
+        '<section id="summaryContent">\n' + summaryContent + "</section>\n";
     } catch (e) {
       if (e.code != "ENOENT") {
         console.log("parse summaryContent error: ", e);
       }
       summaryContent = "";
     }
-    outputContent = outputContent.replace("<!-- @@topContent -->", topContent + summaryContent);
+    outputContent = outputContent.replace(
+      "<!-- @@topContent -->",
+      topContent + summaryContent,
+    );
 
     const folderArr = folderInfo.directories;
     folderArr.sort(function (a, b) {
@@ -216,16 +239,30 @@ function injectOpusFolderContent(templateContent) {
     });
     if (folderArr.length == 0) {
       const displayClassName = " displayNone";
-      outputContent = outputContent.replace("@@foldersContentDisplayClass", displayClassName);
+      outputContent = outputContent.replace(
+        "@@foldersContentDisplayClass",
+        displayClassName,
+      );
       outputContent = outputContent.replace("<!-- @@foldersContent -->", "");
     } else {
       const displayClassName = " displayBlock";
-      outputContent = outputContent.replace("@@foldersContentDisplayClass", displayClassName);
+      outputContent = outputContent.replace(
+        "@@foldersContentDisplayClass",
+        displayClassName,
+      );
       const folderArrLiHtml = folderArr.map(function (item) {
-        return '<li><a href="' + item.customPath + '">' + item.name + "</a></li>\n";
+        return (
+          '<li><a href="' + item.customPath + '">' + item.name + "</a></li>\n"
+        );
       });
-      const folderArrUlHtml = '<section id=\"folderMenu\"><h3>栏目</h3><ul class="folder-list">\n' + folderArrLiHtml.join("") + "</ul></section>\n";
-      outputContent = outputContent.replace("<!-- @@foldersContent -->", folderArrUlHtml);
+      const folderArrUlHtml =
+        '<section id=\"folderMenu\"><h3>栏目</h3><ul class="folder-list">\n' +
+        folderArrLiHtml.join("") +
+        "</ul></section>\n";
+      outputContent = outputContent.replace(
+        "<!-- @@foldersContent -->",
+        folderArrUlHtml,
+      );
     }
 
     const middleEmdFile = path.join(file.dirname, "middle.emd");
@@ -233,31 +270,49 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(topEmdFile);
       middleContent = await fs.readFile(middleEmdFile, "utf8");
-      middleContent = '<section id="middleContent">\n' + middleContent + "</section>\n";
+      middleContent =
+        '<section id="middleContent">\n' + middleContent + "</section>\n";
     } catch (e) {
       if (e.code != "ENOENT") {
         console.log("parse middleContent error: ", e);
       }
       middleContent = "";
     }
-    outputContent = outputContent.replace("<!-- @@middleContent -->", middleContent);
+    outputContent = outputContent.replace(
+      "<!-- @@middleContent -->",
+      middleContent,
+    );
 
     const fileArr = folderInfo.files;
     if (fileArr.length == 0) {
       const displayClassName = " displayNone";
-      outputContent = outputContent.replace("@@articlesContentDisplayClass", displayClassName);
+      outputContent = outputContent.replace(
+        "@@articlesContentDisplayClass",
+        displayClassName,
+      );
       outputContent = outputContent.replace("<!-- @@articlesContent -->", "");
     } else {
       const displayClassName = " displayBlock";
-      outputContent = outputContent.replace("@@articlesContentDisplayClass", displayClassName);
+      outputContent = outputContent.replace(
+        "@@articlesContentDisplayClass",
+        displayClassName,
+      );
       fileArr.sort(function (a, b) {
         return a.order - b.order;
       });
       const fileArrLiHtml = fileArr.map(function (item) {
-        return '<li><a href="' + item.customPath + '">' + item.name + "</a></li>";
+        return (
+          '<li><a href="' + item.customPath + '">' + item.name + "</a></li>"
+        );
       });
-      const fileArrUlHtml = '<section id=\"articleMenu\"><h3>文章</h3><ul class="article-list">\n' + fileArrLiHtml.join("") + "</ul></section>\n";
-      outputContent = outputContent.replace("<!-- @@articlesContent -->", fileArrUlHtml);
+      const fileArrUlHtml =
+        '<section id=\"articleMenu\"><h3>文章</h3><ul class="article-list">\n' +
+        fileArrLiHtml.join("") +
+        "</ul></section>\n";
+      outputContent = outputContent.replace(
+        "<!-- @@articlesContent -->",
+        fileArrUlHtml,
+      );
     }
 
     const bottomEmdFile = path.join(file.dirname, "bottom.emd");
@@ -265,14 +320,18 @@ function injectOpusFolderContent(templateContent) {
     try {
       await fs.access(bottomEmdFile);
       bottomContent = await fs.readFile(bottomEmdFile, "utf8");
-      bottomContent = '<section id="bottomContent">\n' + bottomContent + "</section>\n";
+      bottomContent =
+        '<section id="bottomContent">\n' + bottomContent + "</section>\n";
     } catch (e) {
       if (e.code != "ENOENT") {
         console.log("parse bottomContent error: ", e);
       }
       bottomContent = "";
     }
-    outputContent = outputContent.replace("<!-- @@bottomContent -->", bottomContent);
+    outputContent = outputContent.replace(
+      "<!-- @@bottomContent -->",
+      bottomContent,
+    );
 
     file.contents = Buffer.from(outputContent);
     file.extname = ".html";
@@ -307,7 +366,11 @@ async function generateIndex(dirPath) {
 
   for (const item of fsItems) {
     if (item.isDirectory()) {
-      const subDirJsonPath = path.join(item.parentPath, item.name, "index.json");
+      const subDirJsonPath = path.join(
+        item.parentPath,
+        item.name,
+        "index.json",
+      );
       const subJsonStr = await readOrCreateFile(subDirJsonPath, "{}");
       let subDirJson;
       try {
@@ -447,7 +510,9 @@ export function copy_css() {
 }
 
 function copy_css_lib() {
-  return src("src/css/lib/**", { encoding: false }).pipe(dest(Dist + "/css/lib"));
+  return src("src/css/lib/**", { encoding: false }).pipe(
+    dest(Dist + "/css/lib"),
+  );
 }
 
 export function copy_images() {
@@ -458,7 +523,15 @@ export function copy_deploy() {
   return src("src/deploy/**", { encoding: false }).pipe(dest(Dist));
 }
 
-var copy_sources = parallel(copy_css, copy_css_lib, copy_js_lib, copy_js_compile_less, copy_html, copy_opus_article, copy_images);
+var copy_sources = parallel(
+  copy_css,
+  copy_css_lib,
+  copy_js_lib,
+  copy_js_compile_less,
+  copy_html,
+  copy_opus_article,
+  copy_images,
+);
 
 export function clean_task() {
   return src(Dist, {
@@ -466,7 +539,16 @@ export function clean_task() {
   }).pipe(Clean());
 }
 
-const start = series(clean_task, copy_sources, copy_deploy, compile_js, web_server, watch_task, make_opus_index, copy_opus_folder_index);
+const start = series(
+  clean_task,
+  copy_sources,
+  copy_deploy,
+  compile_js,
+  web_server,
+  watch_task,
+  make_opus_index,
+  copy_opus_folder_index,
+);
 
 function changeToProd(cb) {
   Dist = Dist_Prod;
@@ -474,7 +556,15 @@ function changeToProd(cb) {
   cb();
 }
 
-export const build = series(changeToProd, clean_task, copy_sources, copy_deploy, compile_js, make_opus_index, copy_opus_folder_index);
+export const build = series(
+  changeToProd,
+  clean_task,
+  copy_sources,
+  copy_deploy,
+  compile_js,
+  make_opus_index,
+  copy_opus_folder_index,
+);
 
 export const gh_deploy = (cb) => {
   ghpages.publish(Dist_Prod, (err) => {
@@ -496,13 +586,14 @@ export const sync_deploy = async () => {
   console.log(JSON.stringify(sshConfig));
   const account = sshConfig.account;
   console.log(account.host);
-  src(Dist_Prod + "/**").pipe(
+  src(Dist_Prod).pipe(
     rsync({
       root: Dist_Prod + "/",
       hostname: account.host,
       username: account.username,
       password: account.password,
-      destination: "/data/www/",
+      destination: account.destination,
+      recursive: true,
       archive: true,
       silent: false,
       compress: true,
