@@ -591,7 +591,6 @@ export const sync_deploy = async () => {
       root: Dist_Prod + "/",
       hostname: account.host,
       username: account.username,
-      password: account.password,
       destination: account.destination,
       recursive: true,
       archive: true,
