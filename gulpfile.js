@@ -581,7 +581,7 @@ export const sync_deploy = async () => {
   let profileCustom = pickupArgVaule("profile");
   if (profileCustom != null) profile = profileCustom;
   const filePath = "./ssh-config-" + profile + ".js";
-  console.log(filePath);
+  // console.log(filePath);
   const { default: sshConfig } = await import(filePath);
   console.log(JSON.stringify(sshConfig));
   const account = sshConfig.account;
