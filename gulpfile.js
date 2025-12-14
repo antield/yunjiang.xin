@@ -583,7 +583,7 @@ export const sync_deploy = async () => {
   const filePath = "./ssh-config-" + profile + ".js";
   // console.log(filePath);
   const { default: sshConfig } = await import(filePath);
-  console.log(JSON.stringify(sshConfig));
+  // console.log(JSON.stringify(sshConfig));
   const account = sshConfig.account;
   console.log(account.host);
   src(Dist_Prod).pipe(
