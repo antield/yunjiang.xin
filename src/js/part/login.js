@@ -397,7 +397,15 @@ export function init(afterLogin, requireStartLogin, loginBarElement, fetchExecut
   let logoutAnchor = loginedInfoBar.querySelector(".logoutAnchor");
   logoutAnchor.onclick = logout;
 
-  if (requireStartLogin) checkLogin().then(afterLogin);
+  if (requireStartLogin) {
+    checkLogin().then(afterLogin);
+  } else {
+    let tokenStr = getTokenStr();
+    if (tokenStr != null && tokenStr != "") {
+      showLoginedInfoBar();
+      return Promise.resolve(true);
+    }
+  }
 
   registerBoard = document.getElementById("registerBoard");
   let registerAnchor = loginBoard.querySelector("#registerAnchor");
