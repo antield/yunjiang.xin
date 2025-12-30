@@ -581,9 +581,9 @@ export const sync_deploy = async () => {
   let profileCustom = pickupArgVaule("profile");
   if (profileCustom != null) profile = profileCustom;
   const filePath = "./ssh-config-" + profile + ".js";
-  console.log(filePath);
+  // console.log(filePath);
   const { default: sshConfig } = await import(filePath);
-  console.log(JSON.stringify(sshConfig));
+  // console.log(JSON.stringify(sshConfig));
   const account = sshConfig.account;
   console.log(account.host);
   src(Dist_Prod).pipe(
@@ -591,7 +591,6 @@ export const sync_deploy = async () => {
       root: Dist_Prod + "/",
       hostname: account.host,
       username: account.username,
-      password: account.password,
       destination: account.destination,
       recursive: true,
       archive: true,
